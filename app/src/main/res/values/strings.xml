@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My First App</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send</string>
+    <string name="settings">Settings</string>
+    <string name="favorite">Favorite</string>
+    <string name="examble">Examble</string>
+    <string name="message">Message</string>
+    <string name="rocket_launch">Rocket launch</string>
+    <string name="list">List</string>
+    <string name="list_header">Header</string>
+    <string name="contact_list">Contacts</string>
+    <string name="examble_info_title">Cuteness incarnate</string>
+    <string name="examble_info">-Lion cubs are playful and very curious
+        \n-Most cubs are actually born with spots, which eventually disappear when the cubs grow older</string>
+</resources>

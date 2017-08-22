@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/menu_examble"
+        android:title="@string/examble"/>
+
+    <item
+        android:id="@+id/menu_favorite"
+        android:title="@string/favorite"/>
+
+    <item
+        android:id="@+id/menu_message"
+        android:title="@string/message"/>
+
+    <item android:id="@+id/menu_rocketlaunch"
+        android:title="@string/rocket_launch"/>
+
+    <item android:id="@+id/menu_list"
+        android:title="@string/list"/>
+
+    <item android:id="@+id/menu_contact_list"
+    android:title="@string/contact_list"/>
+
+
+</menu>
