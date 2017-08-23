@@ -10,7 +10,9 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"/>
+        android:background="@color/background"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

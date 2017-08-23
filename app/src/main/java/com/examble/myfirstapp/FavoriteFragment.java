@@ -21,8 +21,8 @@ public class FavoriteFragment extends Fragment {
     protected ImageView imageView;
     protected float screenHeight;
     protected Button button;
-    protected boolean completed;
-    protected boolean visibility;
+    protected boolean down;
+    protected float newPosition;
     protected float startPosition;
     static final String SAVED_TEXT = "buttonText";
     static final String SAVED_VISIBILITY = "imageVisibility";
@@ -50,13 +50,12 @@ public class FavoriteFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (button.getText().toString().equals("FAVORITE")) {
-                    if (completed) {
+                    if (down) {
                         imageView.setVisibility(View.INVISIBLE);
-                        imageView.setTranslationY(startPosition);
-                        circularReveal();
-                    } else {
-                        circularReveal();
+                        imageView.setTranslationY(0);
+                        down = false;
                     }
+                    circularReveal();
                 } else {
                     reverseCircularReveal();
                 }
@@ -65,7 +64,11 @@ public class FavoriteFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                favoriteAnimation();
+                if (down) {
+                    favoriteUpAnimation();
+                } else {
+                    favoriteDownAnimation();
+                }
             }
         });
         return root;
@@ -74,11 +77,11 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        if(button != null) {
-            savedState.putString(SAVED_TEXT,button.getText().toString());
+        if (button != null) {
+            savedState.putString(SAVED_TEXT, button.getText().toString());
         }
-        if(imageView != null) {
-            savedState.putBoolean(SAVED_VISIBILITY,imageView.isShown());
+        if (imageView != null) {
+            savedState.putBoolean(SAVED_VISIBILITY, imageView.isShown());
         }
     }
 
@@ -132,9 +135,9 @@ public class FavoriteFragment extends Fragment {
         animation.start();
     }
 
-    //Imageview animation
-    public void favoriteAnimation() {
-        ValueAnimator animator = ValueAnimator.ofFloat(0, screenHeight);
+    //Imageview down-animation
+    public void favoriteDownAnimation() {
+        ValueAnimator animator = ValueAnimator.ofFloat(startPosition, screenHeight / 2);
 
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -151,7 +154,43 @@ public class FavoriteFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                completed = true;
+                down = true;
+                newPosition = imageView.getTranslationY();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        animator.setDuration(1500L);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.start();
+    }
+
+    //Imageview up-animation
+    public void favoriteUpAnimation() {
+        ValueAnimator animator = ValueAnimator.ofFloat(newPosition, startPosition);
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+
+                float value = (float) animation.getAnimatedValue();
+                imageView.setTranslationY(value);
+            }
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                down = false;
             }
 
             @Override

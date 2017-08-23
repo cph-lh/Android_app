@@ -10,5 +10,4 @@
         android:scaleType="centerCrop"
         android:src="@drawable/cub"
         ></ImageView>
-        <!--android:background="@color/white"-->
 </LinearLayout>
