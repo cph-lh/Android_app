@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         if (savedInstanceState == null) {
-            FavoriteFragment startFragment = new FavoriteFragment();
+            LaunchRocketAnimationFragment startFragment = new LaunchRocketAnimationFragment();
             getFragmentManager().beginTransaction().add(R.id.fragment_container, startFragment)
                     .addToBackStack(null).commit();
         }

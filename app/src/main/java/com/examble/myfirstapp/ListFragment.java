@@ -2,6 +2,8 @@ package com.examble.myfirstapp;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,7 @@ public class ListFragment extends Fragment {
 
     static final String SAVED_ARRAY = "itemArray";
     protected View root;
-    protected ImageView imageView;
+    protected FloatingActionButton imageView;
     protected ListView listView;
     protected View listHeader;
     protected ArrayAdapter<String> adapter;
@@ -31,14 +33,13 @@ public class ListFragment extends Fragment {
 
         root = inflater.inflate(R.layout.list_fragment, container, false);
         listView = (ListView) root.findViewById(R.id.list_view);
-        listHeader = (TextView) root.findViewById(R.id.header);
-        imageView = (ImageView) root.findViewById(R.id.add_item);
-        listHeader = inflater.inflate(R.layout.list_header, null, false);
-        listView.addHeaderView(listHeader, null, false);
+        imageView = (FloatingActionButton) root.findViewById(R.id.add_item);
+//        listHeader = inflater.inflate(R.layout.list_header, null, false);
+//        listView.addHeaderView(listHeader, null, false);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long id) {
-                Toast.makeText(getActivity(), "Selected " + av.getItemAtPosition(position) + " -\nshuffled items!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), av.getItemAtPosition(position) + " - shuffled items!", Toast.LENGTH_SHORT).show();
                 Collections.shuffle(itemArray);
                 adapter.notifyDataSetChanged();
             }
@@ -50,6 +51,7 @@ public class ListFragment extends Fragment {
                 String newItem = "Item " + (itemArray.size() + 1);
                 itemArray.add(newItem);
                 adapter.notifyDataSetChanged();
+                Snackbar.make(view, "Added "+newItem, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
@@ -61,7 +63,8 @@ public class ListFragment extends Fragment {
                 itemArray.add("Item " + (i + 1));
             }
         }
-
+//TODO change arrayAdapter to a separate one, bindview to distinguish between header and normal element
+//TODO expand complexity of normal elements in the list (add imageviews, multiple textviews - similar to the recyclerview
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, itemArray);
         listView.setAdapter(adapter);
         return root;

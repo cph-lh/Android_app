@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -18,14 +19,18 @@ import android.widget.ImageView;
 public class FavoriteFragment extends Fragment {
 
     protected View root;
-    protected ImageView imageView;
+    protected ImageView favorite;
     protected float screenHeight;
     protected Button button;
     protected boolean down;
+    protected boolean running;
     protected float newPosition;
     protected float startPosition;
+    protected Animator animator;
+    protected ValueAnimator vAnimator;
     static final String SAVED_TEXT = "buttonText";
     static final String SAVED_VISIBILITY = "imageVisibility";
+    private static final String TAG = "print";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
@@ -33,16 +38,16 @@ public class FavoriteFragment extends Fragment {
 
         getScreenHeight();
         root = inflater.inflate(R.layout.favorite_fragment, container, false);
-        imageView = root.findViewById(R.id.favorite);
-        button = root.findViewById(R.id.favorite_button);
+        favorite = (ImageView) root.findViewById(R.id.favorite);
+        button = (Button) root.findViewById(R.id.favorite_button);
 
-        startPosition = imageView.getTranslationY();
+        startPosition = favorite.getTranslationY();
         if (savedState != null) {
             button.setText(savedState.getString(SAVED_TEXT));
             if (savedState.getBoolean(SAVED_VISIBILITY)) {
-                imageView.setVisibility(View.VISIBLE);
+                favorite.setVisibility(View.VISIBLE);
             } else {
-                imageView.setVisibility(View.INVISIBLE);
+                favorite.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -51,8 +56,8 @@ public class FavoriteFragment extends Fragment {
             public void onClick(View view) {
                 if (button.getText().toString().equals("FAVORITE")) {
                     if (down) {
-                        imageView.setVisibility(View.INVISIBLE);
-                        imageView.setTranslationY(0);
+                        favorite.setVisibility(View.INVISIBLE);
+                        favorite.setTranslationY(0);
                         down = false;
                     }
                     circularReveal();
@@ -61,11 +66,13 @@ public class FavoriteFragment extends Fragment {
                 }
             }
         });
-        imageView.setOnClickListener(new View.OnClickListener() {
+        favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (down) {
                     favoriteUpAnimation();
+                } else if (running && !down) {
+                    //Do nothing
                 } else {
                     favoriteDownAnimation();
                 }
@@ -80,8 +87,8 @@ public class FavoriteFragment extends Fragment {
         if (button != null) {
             savedState.putString(SAVED_TEXT, button.getText().toString());
         }
-        if (imageView != null) {
-            savedState.putBoolean(SAVED_VISIBILITY, imageView.isShown());
+        if (favorite != null) {
+            savedState.putBoolean(SAVED_VISIBILITY, favorite.isShown());
         }
     }
 
@@ -94,33 +101,33 @@ public class FavoriteFragment extends Fragment {
 
     //Reveal animation
     public void circularReveal() {
-        int x = imageView.getWidth() / 2;
+        int x = favorite.getWidth() / 2;
         int y = 0;
-        float endRadius = (float) Math.hypot(imageView.getWidth(), imageView.getHeight());
+        float endRadius = (float) Math.hypot(favorite.getWidth(), favorite.getHeight());
 
-        Animator animator = ViewAnimationUtils.createCircularReveal(imageView, x, y, 0, endRadius);
+        animator = ViewAnimationUtils.createCircularReveal(favorite, x, y, 0, endRadius);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        imageView.setVisibility(View.VISIBLE);
+        favorite.setVisibility(View.VISIBLE);
         animator.start();
         button.setText("UNFAVORITE");
     }
 
     //Hide animation
     public void reverseCircularReveal() {
-        int x = imageView.getWidth() / 2;
+        int x = favorite.getWidth() / 2;
         int y = 0;
-        float startRadius = (float) imageView.getWidth();
+        float startRadius = (float) favorite.getWidth();
 
-        Animator animation = ViewAnimationUtils.createCircularReveal(imageView, x, y, startRadius, 0);
-        animation.addListener(new Animator.AnimatorListener() {
+        animator = ViewAnimationUtils.createCircularReveal(favorite, x, y, startRadius, 0);
+        animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                imageView.setVisibility(View.INVISIBLE);
+                favorite.setVisibility(View.INVISIBLE);
                 button.setText("FAVORITE");
             }
 
@@ -132,77 +139,88 @@ public class FavoriteFragment extends Fragment {
             public void onAnimationRepeat(Animator animation) {
             }
         });
-        animation.start();
+        animator.start();
+        if (running) {
+            vAnimator.cancel();
+        }
     }
 
     //Imageview down-animation
     public void favoriteDownAnimation() {
-        ValueAnimator animator = ValueAnimator.ofFloat(startPosition, screenHeight / 2);
+        running = true;
+        vAnimator = ValueAnimator.ofFloat(startPosition, screenHeight / 2);
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
                 float value = (float) animation.getAnimatedValue();
-                imageView.setTranslationY(value);
+                favorite.setTranslationY(value);
             }
         });
-        animator.addListener(new Animator.AnimatorListener() {
+        vAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
+                running = true;
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 down = true;
-                newPosition = imageView.getTranslationY();
+                running = false;
+                newPosition = favorite.getTranslationY();
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
+                running = false;
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
             }
         });
-        animator.setDuration(1500L);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.start();
+        vAnimator.setDuration(1500L);
+        vAnimator.setInterpolator(new LinearInterpolator());
+        vAnimator.start();
     }
 
     //Imageview up-animation
     public void favoriteUpAnimation() {
-        ValueAnimator animator = ValueAnimator.ofFloat(newPosition, startPosition);
+        vAnimator = ValueAnimator.ofFloat(newPosition, startPosition);
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
                 float value = (float) animation.getAnimatedValue();
-                imageView.setTranslationY(value);
+                favorite.setTranslationY(value);
             }
         });
-        animator.addListener(new Animator.AnimatorListener() {
+        vAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
+                down = false;
+                running = true;
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 down = false;
+                running = false;
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
+                running = false;
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
             }
         });
-        animator.setDuration(1500L);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.start();
+        vAnimator.setDuration(1500L);
+        vAnimator.setInterpolator(new LinearInterpolator());
+        vAnimator.start();
     }
 }

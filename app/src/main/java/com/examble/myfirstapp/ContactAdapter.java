@@ -1,8 +1,6 @@
 package com.examble.myfirstapp;
 
-import android.nfc.Tag;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,33 +21,31 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private Contact mContact;
+        private Contact contact;
         private ImageView mImageView;
-        private TextView mNameTextView;
-        private TextView mInfoTextView;
+        private TextView nameTextView;
+        private TextView infoTextView;
 
         public ViewHolder(View v) {
             super(v);
             mImageView = (ImageView) itemView.findViewById(R.id.contact_image);
-            mNameTextView = (TextView) itemView.findViewById(R.id.contact_name);
-            mInfoTextView = (TextView) itemView.findViewById(R.id.contact_info);
+            nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
+            infoTextView = (TextView) itemView.findViewById(R.id.contact_info);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                  Toast.makeText(v.getContext(), "Selected "+mContact.getName()+" -\nshuffled contacts!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), contact.getName() + " - shuffled contacts!", Toast.LENGTH_SHORT).show();
                     Collections.shuffle(mContacts);
                     notifyDataSetChanged();
                 }
             });
-            //itemView.getTag();
-            //Log.v(e,"sdasdasdasdasdasdasd --- "+itemView.getTag());
         }
 
         public void bindData(Contact c) {
-            mContact = c;
+            contact = c;
             mImageView.setImageResource(c.getImageId());
-            mNameTextView.setText(c.getName());
-            mInfoTextView.setText(c.getInfo());
+            nameTextView.setText(c.getName());
+            infoTextView.setText(c.getInfo());
         }
     }
 
@@ -70,5 +66,4 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public int getItemCount() {
         return mContacts.size();
     }
-
 }

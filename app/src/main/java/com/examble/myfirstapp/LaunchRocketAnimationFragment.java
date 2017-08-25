@@ -1,36 +1,39 @@
 package com.examble.myfirstapp;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+
+import java.util.Random;
 
 public class LaunchRocketAnimationFragment extends Fragment {
 
     protected View mRocket;
     protected View mDoge;
     protected float screenHeight;
-    protected float startPosition;
-    protected long animationDuration;
+    protected float destination;
+    protected float startPosition = 0;
+    protected long animationDuration = 3000;
     protected boolean running;
+    protected int color;
     protected View root;
-    protected ObjectAnimator oAnimator;
+    protected View background;
     protected ValueAnimator vAnimator;
-    protected AnimatorSet animatorSet;
+    protected Animator animator;
     static final String SAVED_START_POSITION = "startPosition";
     static final String SAVED_RUN_STATUS = "runStatus";
+    static final String SAVED_ANIMATION_DURATION = "animationDuration";
+    static final String SAVED_BACKGROUND_COLOR = "color";
     private static final String TAG = "print";
 
     @Override
@@ -41,28 +44,36 @@ public class LaunchRocketAnimationFragment extends Fragment {
         root = inflater.inflate(R.layout.launch_rocket_fragment, container, false);
         mRocket = root.findViewById(R.id.rocket);
         mDoge = root.findViewById(R.id.doge);
-        startPosition = 0;
-        animationDuration = 3000;
+        background = root.findViewById(R.id.reveal_background);
 
         if (savedState != null) {
+            color = savedState.getInt(SAVED_BACKGROUND_COLOR);
+            root.setBackgroundColor(color);
+            startPosition = savedState.getFloat(SAVED_START_POSITION) * screenHeight;
+            mRocket.setTranslationY(startPosition);
+            mDoge.setTranslationY(startPosition);
             running = savedState.getBoolean(SAVED_RUN_STATUS);
             if (running) {
-                startPosition = savedState.getFloat(SAVED_START_POSITION) * screenHeight;
-                mRocket.setTranslationY(startPosition);
-                mDoge.setTranslationY(startPosition);
-                startAnimation(animationDuration);
+                animationDuration = savedState.getLong(SAVED_ANIMATION_DURATION);
+                playRocketAnimation(animationDuration);
             }
         }
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (running) {
-                    animatorSet.pause();
+                    vAnimator.pause();
                     running = false;
                     animationDuration = animationDuration - vAnimator.getCurrentPlayTime();
                     startPosition = mRocket.getTranslationY();
                 } else {
-                    startAnimation(animationDuration);
+                    playRocketAnimation(animationDuration);
+                    if (mRocket.getTranslationY() == 0) {
+                        Random r = new Random();
+                        color = Color.argb(255, r.nextInt(256), r.nextInt(256), r.nextInt(256));
+                        background.setBackgroundColor(color);
+                        playBackgroundAnimation();
+                    }
                 }
             }
         });
@@ -75,7 +86,9 @@ public class LaunchRocketAnimationFragment extends Fragment {
         if (mRocket != null) {
             savedState.putFloat(SAVED_START_POSITION, mRocket.getTranslationY() / screenHeight);
         }
+        savedState.putLong(SAVED_ANIMATION_DURATION, animationDuration);
         savedState.putBoolean(SAVED_RUN_STATUS, running);
+        savedState.putInt(SAVED_BACKGROUND_COLOR, color);
     }
 
     public void getScreenHeight() {
@@ -84,14 +97,11 @@ public class LaunchRocketAnimationFragment extends Fragment {
         screenHeight = displaymetrics.heightPixels;
     }
 
-    public void startAnimation(long duration) {
-        oAnimator = ObjectAnimator.ofObject(root, "backgroundColor",
-                new ArgbEvaluator(),
-                ContextCompat.getColor(getActivity(), R.color.background),
-                ContextCompat.getColor(getActivity(), R.color.black));
-        oAnimator.setDuration(duration);
-
-        vAnimator = ValueAnimator.ofFloat(startPosition, -screenHeight + (screenHeight / 7));
+    public void playRocketAnimation(long duration) {
+        destination = -screenHeight + (screenHeight / 7);
+        vAnimator = ValueAnimator.ofFloat(startPosition, destination);
+//        Log.i(TAG, "fullscreen " + -screenHeight);
+//        Log.i(TAG, "destination " + destination);
         vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
@@ -99,10 +109,10 @@ public class LaunchRocketAnimationFragment extends Fragment {
 
                 float value = (float) animation.getAnimatedValue();
                 mRocket.setTranslationY(value);
+//                Log.i(TAG, "rocket position" + mRocket.getTranslationY());
                 mDoge.setTranslationY(value);
             }
         });
-
         vAnimator.setDuration(duration);
         vAnimator.addListener(new Animator.AnimatorListener() {
 
@@ -129,9 +139,26 @@ public class LaunchRocketAnimationFragment extends Fragment {
             public void onAnimationRepeat(Animator animation) {
             }
         });
-        //vAnimator.start();
-        animatorSet = new AnimatorSet();
-        animatorSet.play(vAnimator).with(oAnimator);
-        animatorSet.start();
+        vAnimator.start();
+    }
+
+    public void playBackgroundAnimation() {
+        int x = background.getWidth() / 2;
+        int y = 0;
+        float startRadius = 0;
+        float endRadius = (float) Math.hypot(background.getWidth(), background.getHeight());
+
+        animator = ViewAnimationUtils.createCircularReveal(background, x, y, startRadius, endRadius);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setDuration(3000);
+        background.setVisibility(View.VISIBLE);
+        animator.start();
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                background.setVisibility(View.INVISIBLE);
+                root.setBackgroundColor(color);
+            }
+        });
     }
 }
