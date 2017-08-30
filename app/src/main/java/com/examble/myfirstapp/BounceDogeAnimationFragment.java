@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -17,75 +18,69 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.util.Random;
 
-public class LaunchRocketAnimationFragment extends Fragment {
+public class BounceDogeAnimationFragment extends Fragment {
 
-    protected View rocket;
     protected View doge;
-    protected float screenHeight;
-    protected float destination;
+    //    protected float screenHeight;
     protected float startPositionY;
+    protected float startPositionX;
+    //    private float animationStartPosition;
     protected long animationDuration;
     protected boolean running;
     protected int color;
     protected View root;
     protected View background;
-    protected ValueAnimator rocketAnimator;
-    protected ObjectAnimator animY;
-    protected ObjectAnimator animX;
+    //    protected ValueAnimator anim1;
+    protected ObjectAnimator anim2Y;
+    protected ObjectAnimator anim2X;
     protected AnimatorSet animatorSet;
     protected Animator animator;
-    static final String SAVED_START_POSITION = "startPositionY";
+    //    static final String SAVED_START_POSITION = "startPositionY";
     static final String SAVED_RUN_STATUS = "runStatus";
     static final String SAVED_ANIMATION_DURATION = "animationDuration";
     static final String SAVED_BACKGROUND_COLOR = "color";
     private static final String TAG = "print";
 
-//    public static LaunchRocketAnimationFragment newInstance() {
-//        LaunchRocketAnimationFragment launchRocketAnimationFragment = new LaunchRocketAnimationFragment();
-//        return launchRocketAnimationFragment;
-//    }
+    public static BounceDogeAnimationFragment newInstance() {
+        BounceDogeAnimationFragment launchRocketAnimationFragment = new BounceDogeAnimationFragment();
+        return launchRocketAnimationFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         super.onCreateView(inflater, container, savedState);
 
-        root = inflater.inflate(R.layout.launch_rocket_fragment, container, false);
-        rocket = root.findViewById(R.id.rocket);
+        root = inflater.inflate(R.layout.bounce_doge_fragment, container, false);
         doge = root.findViewById(R.id.doge);
         background = root.findViewById(R.id.reveal_background);
 
-        getScreenHeight();
-        startPositionY = 0;
-        animationDuration = 2500;
+        startPositionY = doge.getY();
+        startPositionX = doge.getX();
+        animationDuration = 1000;
 
         if (savedState != null) {
             color = savedState.getInt(SAVED_BACKGROUND_COLOR);
             root.setBackgroundColor(color);
-            startPositionY = savedState.getFloat(SAVED_START_POSITION) * screenHeight;
-            rocket.setTranslationY(startPositionY);
-            doge.setTranslationY(startPositionY);
             running = savedState.getBoolean(SAVED_RUN_STATUS);
             if (running) {
                 animationDuration = savedState.getLong(SAVED_ANIMATION_DURATION);
-                startRocketAnimation(animationDuration);
+                startAnimation(animationDuration);
             }
         }
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int[] location = new int[2];
+                doge.getLocationInWindow(location);
+                Log.w("Doge location", location[0] + " " + location[1]);
                 if (running) {
-                    rocketAnimator.pause();
-                    running = false;
-                    animationDuration = animationDuration - rocketAnimator.getCurrentPlayTime();
-                    startPositionY = rocket.getTranslationY();
+                    //DO NOTHING
                 } else {
-                    startRocketAnimation(animationDuration);
-                    if (rocket.getTranslationY() == 0) {
-                        Random r = new Random();
-                        color = Color.argb(255, r.nextInt(256), r.nextInt(256), r.nextInt(256));
-                        background.setBackgroundColor(color);
-                        playBackgroundAnimation();
-                    }
+                    startAnimation(animationDuration);
+                    Random r = new Random();
+                    color = Color.argb(255, r.nextInt(256), r.nextInt(256), r.nextInt(256));
+                    background.setBackgroundColor(color);
+                    playBackgroundAnimation();
                 }
             }
         });
@@ -95,35 +90,36 @@ public class LaunchRocketAnimationFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        if (rocket != null) {
-            savedState.putFloat(SAVED_START_POSITION, rocket.getTranslationY() / screenHeight);
-        }
+//        if (doge != null) {
+            //savedState Doge position
+//        }
         savedState.putLong(SAVED_ANIMATION_DURATION, animationDuration);
         savedState.putBoolean(SAVED_RUN_STATUS, running);
         savedState.putInt(SAVED_BACKGROUND_COLOR, color);
     }
 
-    public void getScreenHeight() {
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        screenHeight = displaymetrics.heightPixels;
-    }
-
-    public void startRocketAnimation(long duration) {
+    public void startAnimation(long duration) {
+        Log.i(TAG, "STARTED");
         int rootHeight = root.getHeight();
-        destination = -rootHeight;
+        int rootWidth = root.getWidth();
+        int minus = new Random().nextBoolean() ? 1 : -1;
 
-        rocketAnimator = ValueAnimator.ofFloat(startPositionY, destination);
-        rocketAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                rocket.setTranslationY(value);
-                doge.setTranslationY(value);
-            }
-        });
-        rocketAnimator.setDuration(duration);
-        rocketAnimator.addListener(new Animator.AnimatorListener() {
+        //Y
+        float randomY = new Random().nextInt(rootHeight / 2) + doge.getY();
+        float valueY = minus * randomY;
+        float destinationY = Math.max(0, Math.min(valueY, rootHeight));
+        //X
+        float randomX = new Random().nextInt(rootWidth / 2) + doge.getX();
+        float valueX = minus * randomX;
+        float destinationX =  Math.max(0, Math.min(valueX, rootWidth));
+
+        anim2Y = ObjectAnimator.ofFloat(doge, "y", doge.getY(), destinationY);
+        Log.i(TAG,"Y: "+destinationY);
+        anim2X = ObjectAnimator.ofFloat(doge, "x", doge.getX(), destinationX);
+        Log.i(TAG,"X: "+destinationX);
+
+        animatorSet = new AnimatorSet();
+        animatorSet.addListener(new Animator.AnimatorListener() {
 
             @Override
             public void onAnimationStart(Animator animation) {
@@ -132,10 +128,9 @@ public class LaunchRocketAnimationFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (LaunchRocketAnimationFragment.this.isAdded()) {
+                if (BounceDogeAnimationFragment.this.isAdded()) {
                     running = false;
-                    startPositionY = 0;
-                    animationDuration = 2500;
+                    Log.i(TAG, "ENDED");
                 }
             }
 
@@ -149,7 +144,10 @@ public class LaunchRocketAnimationFragment extends Fragment {
             }
         });
 
-        rocketAnimator.start();
+        animatorSet.setDuration(duration);
+        animatorSet.play(anim2Y).with(anim2X);
+        animatorSet.start();
+
     }
 
     public void playBackgroundAnimation() {
@@ -160,7 +158,7 @@ public class LaunchRocketAnimationFragment extends Fragment {
 
         animator = ViewAnimationUtils.createCircularReveal(background, x, y, startRadius, endRadius);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.setDuration(animationDuration);
+        animator.setDuration(1500);
         background.setVisibility(View.VISIBLE);
         animator.start();
         animator.addListener(new AnimatorListenerAdapter() {

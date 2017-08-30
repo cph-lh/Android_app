@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         if (savedInstanceState == null) {
-            LaunchRocketAnimationFragment startFragment = new LaunchRocketAnimationFragment();
+            BounceDogeAnimationFragment startFragment = BounceDogeAnimationFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.fragment_container, startFragment)
                     .addToBackStack(null).commit();
         }
@@ -58,15 +57,22 @@ public class MainActivity extends AppCompatActivity {
                         .addToBackStack(null).commit();
                 return true;
 
-            case R.id.menu_message:
-                MessageFragment message = new MessageFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, message)
+//            case R.id.menu_message:
+//                MessageFragment message = new MessageFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, message)
+//                        .addToBackStack(null).commit();
+//                return true;
+
+
+            case R.id.menu_launch_rocket:
+                LaunchRocketAnimationFragment rocket = new LaunchRocketAnimationFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, rocket)
                         .addToBackStack(null).commit();
                 return true;
 
-            case R.id.menu_rocketlaunch:
-                LaunchRocketAnimationFragment rocket = new LaunchRocketAnimationFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, rocket)
+            case R.id.menu_bounce_doge:
+                BounceDogeAnimationFragment doge = new BounceDogeAnimationFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, doge)
                         .addToBackStack(null).commit();
                 return true;
 

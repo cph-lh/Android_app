@@ -9,10 +9,10 @@
         android:title="@string/favorite"/>
 
     <item
-        android:id="@+id/menu_message"
-        android:title="@string/message"/>
+        android:id="@+id/menu_bounce_doge"
+        android:title="@string/bounce_doge"/>
 
-    <item android:id="@+id/menu_rocketlaunch"
+    <item android:id="@+id/menu_launch_rocket"
         android:title="@string/rocket_launch"/>
 
     <item android:id="@+id/menu_list"

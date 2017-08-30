@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -19,7 +18,7 @@ import android.widget.ImageView;
 public class FavoriteFragment extends Fragment {
 
     protected View root;
-    protected ImageView favorite;
+    protected ImageView favoriteIcon;
     protected float screenHeight;
     protected Button button;
     protected boolean down;
@@ -38,16 +37,16 @@ public class FavoriteFragment extends Fragment {
 
         getScreenHeight();
         root = inflater.inflate(R.layout.favorite_fragment, container, false);
-        favorite = (ImageView) root.findViewById(R.id.favorite);
+        favoriteIcon = (ImageView) root.findViewById(R.id.favorite);
         button = (Button) root.findViewById(R.id.favorite_button);
 
-        startPosition = favorite.getTranslationY();
+        startPosition = favoriteIcon.getTranslationY();
         if (savedState != null) {
             button.setText(savedState.getString(SAVED_TEXT));
             if (savedState.getBoolean(SAVED_VISIBILITY)) {
-                favorite.setVisibility(View.VISIBLE);
+                favoriteIcon.setVisibility(View.VISIBLE);
             } else {
-                favorite.setVisibility(View.INVISIBLE);
+                favoriteIcon.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -56,8 +55,8 @@ public class FavoriteFragment extends Fragment {
             public void onClick(View view) {
                 if (button.getText().toString().equals("FAVORITE")) {
                     if (down) {
-                        favorite.setVisibility(View.INVISIBLE);
-                        favorite.setTranslationY(0);
+                        favoriteIcon.setVisibility(View.INVISIBLE);
+                        favoriteIcon.setTranslationY(0);
                         down = false;
                     }
                     circularReveal();
@@ -66,7 +65,7 @@ public class FavoriteFragment extends Fragment {
                 }
             }
         });
-        favorite.setOnClickListener(new View.OnClickListener() {
+        favoriteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (down) {
@@ -87,8 +86,8 @@ public class FavoriteFragment extends Fragment {
         if (button != null) {
             savedState.putString(SAVED_TEXT, button.getText().toString());
         }
-        if (favorite != null) {
-            savedState.putBoolean(SAVED_VISIBILITY, favorite.isShown());
+        if (favoriteIcon != null) {
+            savedState.putBoolean(SAVED_VISIBILITY, favoriteIcon.isShown());
         }
     }
 
@@ -101,25 +100,25 @@ public class FavoriteFragment extends Fragment {
 
     //Reveal animation
     public void circularReveal() {
-        int x = favorite.getWidth() / 2;
+        int x = favoriteIcon.getWidth() / 2;
         int y = 0;
-        float endRadius = (float) Math.hypot(favorite.getWidth(), favorite.getHeight());
+        float endRadius = (float) Math.hypot(favoriteIcon.getWidth(), favoriteIcon.getHeight());
 
-        animator = ViewAnimationUtils.createCircularReveal(favorite, x, y, 0, endRadius);
+        animator = ViewAnimationUtils.createCircularReveal(favoriteIcon, x, y, 0, endRadius);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        favorite.setVisibility(View.VISIBLE);
+        favoriteIcon.setVisibility(View.VISIBLE);
         animator.start();
         button.setText("UNFAVORITE");
     }
 
     //Hide animation
     public void reverseCircularReveal() {
-        int x = favorite.getWidth() / 2;
+        int x = favoriteIcon.getWidth() / 2;
         int y = 0;
-        float startRadius = (float) favorite.getWidth();
+        float startRadius = (float) favoriteIcon.getWidth();
 
-        animator = ViewAnimationUtils.createCircularReveal(favorite, x, y, startRadius, 0);
+        animator = ViewAnimationUtils.createCircularReveal(favoriteIcon, x, y, startRadius, 0);
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -127,8 +126,13 @@ public class FavoriteFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                favorite.setVisibility(View.INVISIBLE);
+                favoriteIcon.setVisibility(View.INVISIBLE);
                 button.setText("FAVORITE");
+                if (running) {
+                    vAnimator.cancel();
+                    favoriteIcon.setTranslationY(0);
+
+                }
             }
 
             @Override
@@ -140,9 +144,6 @@ public class FavoriteFragment extends Fragment {
             }
         });
         animator.start();
-        if (running) {
-            vAnimator.cancel();
-        }
     }
 
     //Imageview down-animation
@@ -155,7 +156,7 @@ public class FavoriteFragment extends Fragment {
             public void onAnimationUpdate(ValueAnimator animation) {
 
                 float value = (float) animation.getAnimatedValue();
-                favorite.setTranslationY(value);
+                favoriteIcon.setTranslationY(value);
             }
         });
         vAnimator.addListener(new Animator.AnimatorListener() {
@@ -168,7 +169,7 @@ public class FavoriteFragment extends Fragment {
             public void onAnimationEnd(Animator animation) {
                 down = true;
                 running = false;
-                newPosition = favorite.getTranslationY();
+                newPosition = favoriteIcon.getTranslationY();
             }
 
             @Override
@@ -194,7 +195,7 @@ public class FavoriteFragment extends Fragment {
             public void onAnimationUpdate(ValueAnimator animation) {
 
                 float value = (float) animation.getAnimatedValue();
-                favorite.setTranslationY(value);
+                favoriteIcon.setTranslationY(value);
             }
         });
         vAnimator.addListener(new Animator.AnimatorListener() {

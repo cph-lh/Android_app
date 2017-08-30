@@ -10,7 +10,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="42dp"
         android:text="FAVORITE"
         android:visibility="visible" />
 

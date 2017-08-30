@@ -13,7 +13,6 @@ import java.util.Collections;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
-    private static final String e = "log";
     protected ArrayList<Contact> mContacts;
 
     public ContactAdapter(ArrayList<Contact> Contacts) {

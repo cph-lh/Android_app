@@ -12,20 +12,10 @@
         android:visibility="invisible"/>
 
     <ImageView
-        android:id="@+id/rocket"
+        android:id="@+id/doge"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/rocket"
-        android:layout_gravity="bottom|center_horizontal"
-        />
-
-    <ImageView
-        android:id="@+id/doge"
         android:src="@drawable/doge"
-        android:layout_marginBottom="53dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:scaleType="centerCrop"
         android:layout_gravity="bottom|center_horizontal"
         />
 
