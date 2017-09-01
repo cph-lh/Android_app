@@ -30,9 +30,9 @@ public class LaunchRocketAnimationFragment extends Fragment {
     protected View root;
     protected View background;
     protected ValueAnimator rocketAnimator;
-    protected ObjectAnimator animY;
-    protected ObjectAnimator animX;
-    protected AnimatorSet animatorSet;
+//    protected ObjectAnimator animY;
+//    protected ObjectAnimator animX;
+//    protected AnimatorSet animatorSet;
     protected Animator animator;
     static final String SAVED_START_POSITION = "startPositionY";
     static final String SAVED_RUN_STATUS = "runStatus";
@@ -49,12 +49,15 @@ public class LaunchRocketAnimationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         super.onCreateView(inflater, container, savedState);
 
+        //Inflates the layout for this fragment
         root = inflater.inflate(R.layout.launch_rocket_fragment, container, false);
         rocket = root.findViewById(R.id.rocket);
         doge = root.findViewById(R.id.doge);
         background = root.findViewById(R.id.reveal_background);
 
+        //Gets the device screen height
         getScreenHeight();
+
         startPositionY = 0;
         animationDuration = 2500;
 
@@ -70,6 +73,8 @@ public class LaunchRocketAnimationFragment extends Fragment {
                 startRocketAnimation(animationDuration);
             }
         }
+
+        //Starts the rocket animation and the bagground animation when the screen is clicked
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +97,7 @@ public class LaunchRocketAnimationFragment extends Fragment {
         return root;
     }
 
+    //Saves important variables on configuration changes (screen orientation etc.)
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
@@ -103,16 +109,19 @@ public class LaunchRocketAnimationFragment extends Fragment {
         savedState.putInt(SAVED_BACKGROUND_COLOR, color);
     }
 
+    //Gets the device screen height
     public void getScreenHeight() {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         screenHeight = displaymetrics.heightPixels;
     }
 
+    //Starts the rocket animation
     public void startRocketAnimation(long duration) {
         int rootHeight = root.getHeight();
         destination = -rootHeight;
 
+        //Animates the rocket between two values
         rocketAnimator = ValueAnimator.ofFloat(startPositionY, destination);
         rocketAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -148,10 +157,10 @@ public class LaunchRocketAnimationFragment extends Fragment {
             public void onAnimationRepeat(Animator animation) {
             }
         });
-
         rocketAnimator.start();
     }
 
+    //Starts the background color animation
     public void playBackgroundAnimation() {
         int x = background.getWidth() / 2;
         int y = 0;

@@ -30,9 +30,12 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
+        //Inflates the layout for this fragment
         root = inflater.inflate(R.layout.list_fragment, container, false);
         listView = (ListView) root.findViewById(R.id.list_view);
         fab = (FloatingActionButton) root.findViewById(R.id.add_item);
+
+        //Shows a toast when an list item is clicked and shuffles the array
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long id) {
@@ -43,6 +46,7 @@ public class ListFragment extends Fragment {
             }
         });
 
+        //Adds a new list item when the FAB is clicked and displays a Snackbar with the data added
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +59,7 @@ public class ListFragment extends Fragment {
             }
         });
 
+        //Sets the array to a saved array (if any) or else create a new array
         if (savedInstanceState != null) {
             itemArray = savedInstanceState.getParcelableArrayList(SAVED_ARRAY);
         } else {
@@ -67,11 +72,13 @@ public class ListFragment extends Fragment {
             }
         }
 
+        //Sets the adapter
         adapter = new ListAdapter(getActivity(), itemArray);
         listView.setAdapter(adapter);
         return root;
     }
 
+    //Saves the array on configuration changes (screen orientation etc.)
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);

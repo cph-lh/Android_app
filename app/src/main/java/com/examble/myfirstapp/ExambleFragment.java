@@ -26,22 +26,14 @@ public class ExambleFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    protected void onStartAnimation() {
+    //Starts the card flip animation
+    private void onStartAnimation() {
         getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out)
                 .replace(R.id.fragment_container, new ExambleInfoFragment()).commit();
     }
 
+    //Makes the animation of the flip look smoother
     private void setCameraDistance() {
         int distance = 8000;
         float scale = getResources().getDisplayMetrics().density * distance;

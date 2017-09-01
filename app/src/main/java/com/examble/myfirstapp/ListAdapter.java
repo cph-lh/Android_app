@@ -14,10 +14,10 @@ import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
 
-    private static final int VIEW_TYPE_SECTION = 1;
-    private static final int VIEW_TYPE_ITEM = 2;
-    protected Context context;
-    protected ArrayList<ListItem> itemArray;
+//    private static final int VIEW_TYPE_SECTION = 1;
+//    private static final int VIEW_TYPE_ITEM = 2;
+    private Context context;
+    private ArrayList<ListItem> itemArray;
     private static final String TAG = "print";
 
     public ListAdapter(Context context, ArrayList<ListItem> items) {
@@ -25,7 +25,7 @@ public class ListAdapter extends BaseAdapter {
         this.itemArray = items;
     }
 
-    public class ViewHolder {
+    private class ViewHolder {
         private ListItem listItem;
         private ImageView editItem;
         private TextView itemName;

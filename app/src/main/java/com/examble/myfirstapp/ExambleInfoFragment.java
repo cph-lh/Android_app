@@ -26,12 +26,14 @@ public class ExambleInfoFragment extends Fragment {
         return root;
     }
 
+    //Starts the card flip animation
     protected void onStartAnimation() {
         getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.animator.card_flip_left_in, R.animator.card_flip_left_out)
                 .replace(R.id.fragment_container, new ExambleFragment()).commit();
     }
 
+    //Makes the flip animation look smoother
     private void setCameraDistance() {
         int distance = 8000;
         float scale = getResources().getDisplayMetrics().density * distance;

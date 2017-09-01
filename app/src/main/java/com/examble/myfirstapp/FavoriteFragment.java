@@ -35,10 +35,13 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         super.onCreateView(inflater, container, savedState);
 
-        getScreenHeight();
+        //Inflates the layout for this fragment
         root = inflater.inflate(R.layout.favorite_fragment, container, false);
         favoriteIcon = (ImageView) root.findViewById(R.id.favorite);
         button = (Button) root.findViewById(R.id.favorite_button);
+
+        //Gets the device screen height
+        getScreenHeight();
 
         startPosition = favoriteIcon.getTranslationY();
         if (savedState != null) {
@@ -80,6 +83,7 @@ public class FavoriteFragment extends Fragment {
         return root;
     }
 
+    //Saves important variables on configuration changes (screen orientation etc.)
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
@@ -91,14 +95,14 @@ public class FavoriteFragment extends Fragment {
         }
     }
 
-    //Gets device screenheight
+    //Gets the device screen height
     public void getScreenHeight() {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         screenHeight = displaymetrics.heightPixels;
     }
 
-    //Reveal animation
+    //Starts the reveal animation
     public void circularReveal() {
         int x = favoriteIcon.getWidth() / 2;
         int y = 0;
@@ -112,7 +116,7 @@ public class FavoriteFragment extends Fragment {
         button.setText("UNFAVORITE");
     }
 
-    //Hide animation
+    //Starts the hide animation
     public void reverseCircularReveal() {
         int x = favoriteIcon.getWidth() / 2;
         int y = 0;
@@ -146,7 +150,7 @@ public class FavoriteFragment extends Fragment {
         animator.start();
     }
 
-    //Imageview down-animation
+    //Starts the down-animation
     public void favoriteDownAnimation() {
         running = true;
         vAnimator = ValueAnimator.ofFloat(startPosition, screenHeight / 2);
@@ -186,7 +190,7 @@ public class FavoriteFragment extends Fragment {
         vAnimator.start();
     }
 
-    //Imageview up-animation
+    //Starts the up-animation
     public void favoriteUpAnimation() {
         vAnimator = ValueAnimator.ofFloat(newPosition, startPosition);
 

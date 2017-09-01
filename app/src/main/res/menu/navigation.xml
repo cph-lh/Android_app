@@ -15,11 +15,13 @@
     <item android:id="@+id/menu_launch_rocket"
         android:title="@string/rocket_launch"/>
 
+    <item android:id="@+id/menu_message"
+        android:title="@string/message"/>
+
     <item android:id="@+id/menu_list"
         android:title="@string/list"/>
 
     <item android:id="@+id/menu_contact_list"
     android:title="@string/contact_list"/>
-
 
 </menu>

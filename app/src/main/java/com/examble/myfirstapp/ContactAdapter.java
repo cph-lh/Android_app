@@ -25,7 +25,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         private TextView nameTextView;
         private TextView infoTextView;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             mImageView = (ImageView) itemView.findViewById(R.id.contact_image);
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
@@ -40,7 +40,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             });
         }
 
-        public void bindData(Contact c) {
+        private void bindData(Contact c) {
             contact = c;
             mImageView.setImageResource(c.getImageId());
             nameTextView.setText(c.getName());

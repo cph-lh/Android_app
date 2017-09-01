@@ -8,7 +8,6 @@ import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,21 +20,17 @@ import java.util.Random;
 public class BounceDogeAnimationFragment extends Fragment {
 
     protected View doge;
-    //    protected float screenHeight;
     protected float startPositionY;
     protected float startPositionX;
-    //    private float animationStartPosition;
     protected long animationDuration;
     protected boolean running;
     protected int color;
     protected View root;
     protected View background;
-    //    protected ValueAnimator anim1;
-    protected ObjectAnimator anim2Y;
-    protected ObjectAnimator anim2X;
-    protected AnimatorSet animatorSet;
+    protected ObjectAnimator animY;
+    protected ObjectAnimator animX;
     protected Animator animator;
-    //    static final String SAVED_START_POSITION = "startPositionY";
+    protected AnimatorSet animatorSet;
     static final String SAVED_RUN_STATUS = "runStatus";
     static final String SAVED_ANIMATION_DURATION = "animationDuration";
     static final String SAVED_BACKGROUND_COLOR = "color";
@@ -50,6 +45,7 @@ public class BounceDogeAnimationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         super.onCreateView(inflater, container, savedState);
 
+        //Inflates the layout for this fragment
         root = inflater.inflate(R.layout.bounce_doge_fragment, container, false);
         doge = root.findViewById(R.id.doge);
         background = root.findViewById(R.id.reveal_background);
@@ -67,6 +63,8 @@ public class BounceDogeAnimationFragment extends Fragment {
                 startAnimation(animationDuration);
             }
         }
+
+        //Starts and cancels the animation
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +72,7 @@ public class BounceDogeAnimationFragment extends Fragment {
                 doge.getLocationInWindow(location);
                 Log.w("Doge location", location[0] + " " + location[1]);
                 if (running) {
-                    //DO NOTHING
+                    animatorSet.cancel();
                 } else {
                     startAnimation(animationDuration);
                     Random r = new Random();
@@ -98,6 +96,7 @@ public class BounceDogeAnimationFragment extends Fragment {
         savedState.putInt(SAVED_BACKGROUND_COLOR, color);
     }
 
+    //Starts the doge animation
     public void startAnimation(long duration) {
         Log.i(TAG, "STARTED");
         int rootHeight = root.getHeight();
@@ -105,18 +104,18 @@ public class BounceDogeAnimationFragment extends Fragment {
         int minus = new Random().nextBoolean() ? 1 : -1;
 
         //Y
-        float randomY = new Random().nextInt(rootHeight / 2) + doge.getY();
+        float randomY = new Random().nextInt(rootHeight) - doge.getHeight();
         float valueY = minus * randomY;
-        float destinationY = Math.max(0, Math.min(valueY, rootHeight));
+        float destinationY = Math.max(valueY, Math.min(0, rootHeight));
         //X
-        float randomX = new Random().nextInt(rootWidth / 2) + doge.getX();
+        float randomX = new Random().nextInt(rootWidth) - doge.getWidth();
         float valueX = minus * randomX;
-        float destinationX =  Math.max(0, Math.min(valueX, rootWidth));
+        float destinationX =  Math.max(valueX, Math.min(0, rootWidth));
 
-        anim2Y = ObjectAnimator.ofFloat(doge, "y", doge.getY(), destinationY);
-        Log.i(TAG,"Y: "+destinationY);
-        anim2X = ObjectAnimator.ofFloat(doge, "x", doge.getX(), destinationX);
-        Log.i(TAG,"X: "+destinationX);
+        animY = ObjectAnimator.ofFloat(doge, "y", doge.getY(), destinationY);
+        Log.i(TAG,"DestY: "+destinationY);
+        animX = ObjectAnimator.ofFloat(doge, "x", doge.getX(), destinationX);
+        Log.i(TAG,"DestX: "+destinationX);
 
         animatorSet = new AnimatorSet();
         animatorSet.addListener(new Animator.AnimatorListener() {
@@ -129,8 +128,14 @@ public class BounceDogeAnimationFragment extends Fragment {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (BounceDogeAnimationFragment.this.isAdded()) {
-                    running = false;
                     Log.i(TAG, "ENDED");
+                    Log.i(TAG,"CurrY: "+doge.getY());
+                    Log.i(TAG,"CurrX: "+doge.getX());
+                    if (!running) {
+                        //DO NOTHING
+                    } else {
+                        startAnimation(animationDuration);
+                    }
                 }
             }
 
@@ -145,11 +150,12 @@ public class BounceDogeAnimationFragment extends Fragment {
         });
 
         animatorSet.setDuration(duration);
-        animatorSet.play(anim2Y).with(anim2X);
+        animatorSet.play(animY).with(animX);
         animatorSet.start();
 
     }
 
+    //Starts the background color animation
     public void playBackgroundAnimation() {
         int x = background.getWidth() / 2;
         int y = 0;
@@ -158,7 +164,7 @@ public class BounceDogeAnimationFragment extends Fragment {
 
         animator = ViewAnimationUtils.createCircularReveal(background, x, y, startRadius, endRadius);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.setDuration(1500);
+        animator.setDuration(1000);
         background.setVisibility(View.VISIBLE);
         animator.start();
         animator.addListener(new AnimatorListenerAdapter() {
