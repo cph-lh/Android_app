@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,12 +13,48 @@
         android:scrollbars="vertical" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_item"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="16dp"
+        android:layout_gravity="right|bottom|end"
+        android:layout_margin="16dp"
         android:layout_marginRight="16dp"
-        android:scaleType="centerCrop"
+        android:clickable="true"
+        android:scaleType="center"
+        app:layout_anchor="@+id/container"
+        app:layout_anchorGravity="bottom|end|right"
         android:src="@drawable/ic_add"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="90dp"
+        android:clickable="true"
+        android:tint="@color/white"
+        android:scaleType="centerCrop"
+        app:layout_anchor="@+id/fab"
+        app:layout_anchorGravity="top|right|end"
+        app:backgroundTint="@color/colorFAB1"
+        android:visibility="invisible"
+        android:src="@drawable/ic_create"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="158dp"
+        android:clickable="true"
+        android:tint="@color/white"
+        android:scaleType="centerCrop"
+        app:layout_anchor="@+id/fab1"
+        app:layout_anchorGravity="top|right|end"
+        app:backgroundTint="@color/colorFAB2"
+        android:visibility="invisible"
+        android:src="@drawable/ic_done"/>
+
 </android.support.design.widget.CoordinatorLayout>

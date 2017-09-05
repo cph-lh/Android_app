@@ -40,6 +40,6 @@ public class MessageFragment extends Fragment {
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

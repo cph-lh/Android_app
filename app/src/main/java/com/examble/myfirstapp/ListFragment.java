@@ -17,12 +17,12 @@ import java.util.Collections;
 
 public class ListFragment extends Fragment {
 
-    protected View root;
-    protected FloatingActionButton fab;
-    protected ImageView imageView;
-    protected ListView listView;
-    protected ListAdapter adapter;
-    protected ArrayList<ListItem> itemArray;
+    private View root;
+    private FloatingActionButton fab;
+//    private ImageView imageView;
+    private ListView listView;
+    private ListAdapter adapter;
+    private ArrayList<ListItem> itemArray;
     static final String SAVED_ARRAY = "itemArray";
     private static final String TAG = "print";
 
@@ -33,7 +33,7 @@ public class ListFragment extends Fragment {
         //Inflates the layout for this fragment
         root = inflater.inflate(R.layout.list_fragment, container, false);
         listView = (ListView) root.findViewById(R.id.list_view);
-        fab = (FloatingActionButton) root.findViewById(R.id.add_item);
+        fab = (FloatingActionButton) root.findViewById(R.id.fab);
 
         //Shows a toast when an list item is clicked and shuffles the array
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -64,13 +64,14 @@ public class ListFragment extends Fragment {
             itemArray = savedInstanceState.getParcelableArrayList(SAVED_ARRAY);
         } else {
             itemArray = new ArrayList<>();
-            for (int i = 1; i < 100; i++) {
+            for (int i = 0; i < 5; i++) {
                 ListItem item = new ListItem();
-                item.setName("Item " + (i));
-                item.setInfo("Info " + (i));
+                item.setName("Item " + (i + 1));
+                item.setInfo("Info " + (i + 1));
                 itemArray.add(item);
             }
         }
+
 
         //Sets the adapter
         adapter = new ListAdapter(getActivity(), itemArray);

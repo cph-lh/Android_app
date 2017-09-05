@@ -15,7 +15,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message);
 
-        this.overridePendingTransition(R.anim.slide_in,R.anim.slide_out);
+        this.overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
 
         //Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -50,5 +50,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

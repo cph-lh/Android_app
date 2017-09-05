@@ -1,12 +1,13 @@
 package com.examble.myfirstapp;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,33 +21,33 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private Contact contact;
-        private ImageView mImageView;
-        private TextView nameTextView;
-        private TextView infoTextView;
+        protected Contact c;
+        protected ImageView cImageView;
+        protected TextView nameTextView, infoTextView;
+        protected CheckBox checkBox;
 
-        private ViewHolder(View v) {
-            super(v);
-            mImageView = (ImageView) itemView.findViewById(R.id.contact_image);
+        public ViewHolder(View view) {
+            super(view);
+            cImageView = (ImageView) itemView.findViewById(R.id.contact_image);
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
             infoTextView = (TextView) itemView.findViewById(R.id.contact_info);
+            checkBox = (CheckBox) itemView.findViewById(R.id.contact_check);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), contact.getName() + " - shuffled contacts!", Toast.LENGTH_SHORT).show();
-                    Collections.shuffle(mContacts);
-                    notifyDataSetChanged();
+                public void onClick(View view) {
+                    Snackbar.make(view, "Selected " + c.getName(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
             });
         }
 
         private void bindData(Contact c) {
-            contact = c;
-            mImageView.setImageResource(c.getImageId());
+            this.c = c;
+            cImageView.setImageResource(c.getImageId());
             nameTextView.setText(c.getName());
             infoTextView.setText(c.getInfo());
         }
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
