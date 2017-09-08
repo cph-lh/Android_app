@@ -5,8 +5,7 @@ import android.os.Parcelable;
 
 public class ListItem implements Parcelable{
 
-    private String name;
-    private String info;
+    private String name, info;
     private int imageId;
 
     public ListItem() {

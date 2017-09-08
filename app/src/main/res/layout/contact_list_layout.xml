@@ -5,23 +5,23 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:background="?android:selectableItemBackground"
-    android:padding="6dp">
+    android:background="?android:selectableItemBackground">
 
     <ImageView
         android:id="@+id/contact_image"
         android:layout_height="80dp"
         android:layout_width="80dp"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:padding="6dp"/>
 
     <TextView
         android:id="@+id/contact_name"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_toRightOf="@+id/contact_image"
-        android:layout_toLeftOf="@+id/contact_check"
-        android:paddingLeft="10dp"
+        android:paddingLeft="4dp"
         android:paddingTop="10dp"
+        android:paddingRight="6dp"
         android:textSize="25dp"
         android:textStyle="bold"
         android:textColor="@color/white"/>
@@ -31,20 +31,17 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_toRightOf="@+id/contact_image"
-        android:layout_toLeftOf="@+id/contact_check"
-        android:paddingLeft="10dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="10dp"
         android:textSize="18dp"
         android:textColor="@color/white"
         android:layout_alignBottom="@+id/contact_image"
         android:layout_below="@+id/contact_name" />
 
-    <!--<CheckBox-->
-        <!--android:id="@+id/contact_check"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:visibility="invisible"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:buttonTint="@color/white"/>-->
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/black"
+        />
 </RelativeLayout>

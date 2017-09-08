@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
@@ -24,18 +23,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         protected Contact c;
         protected ImageView cImageView;
         protected TextView nameTextView, infoTextView;
-        protected CheckBox checkBox;
 
         public ViewHolder(View view) {
             super(view);
             cImageView = (ImageView) itemView.findViewById(R.id.contact_image);
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
             infoTextView = (TextView) itemView.findViewById(R.id.contact_info);
-            checkBox = (CheckBox) itemView.findViewById(R.id.contact_check);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Selected " + c.getName(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                    Snackbar.make(view, "Selected " + c.getName(), Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -47,7 +44,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             infoTextView.setText(c.getInfo());
         }
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

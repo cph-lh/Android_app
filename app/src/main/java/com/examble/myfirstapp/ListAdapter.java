@@ -28,8 +28,7 @@ public class ListAdapter extends BaseAdapter {
     private class ViewHolder {
         private ListItem listItem;
         private ImageView editItem;
-        private TextView itemName;
-        private TextView itemInfo;
+        private TextView itemName, itemInfo;
 
         public ViewHolder(View view) {
             itemName = (TextView) view.findViewById(R.id.item_name);

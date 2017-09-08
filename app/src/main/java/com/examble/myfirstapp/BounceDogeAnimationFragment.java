@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,15 +19,12 @@ import java.util.Random;
 public class BounceDogeAnimationFragment extends Fragment {
 
     protected View doge;
-    protected float startPositionY;
-    protected float startPositionX;
+    protected float startPositionY, startPositionX;
     protected long animationDuration;
     protected boolean running;
     protected int color;
-    protected View root;
-    protected View background;
-    protected ObjectAnimator animY;
-    protected ObjectAnimator animX;
+    protected View root, background;
+    protected ObjectAnimator animY, animX;
     protected Animator animator;
     protected AnimatorSet animatorSet;
     static final String SAVED_RUN_STATUS = "runStatus";
@@ -37,8 +33,7 @@ public class BounceDogeAnimationFragment extends Fragment {
     private static final String TAG = "print";
 
     public static BounceDogeAnimationFragment newInstance() {
-        BounceDogeAnimationFragment launchRocketAnimationFragment = new BounceDogeAnimationFragment();
-        return launchRocketAnimationFragment;
+        return new BounceDogeAnimationFragment();
     }
 
     @Override

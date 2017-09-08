@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         if (savedInstanceState == null) {
-            BounceDogeAnimationFragment startFragment = BounceDogeAnimationFragment.newInstance();
+            ContactFragment startFragment = ContactFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.fragment_container, startFragment).addToBackStack(null).commit();
-            tag = 1;
+            tag = 8;
         }
     }
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menu_bounce_doge:
                 if (tag != 1) {
-                    BounceDogeAnimationFragment doge = new BounceDogeAnimationFragment();
+                    BounceDogeAnimationFragment doge = new BounceDogeAnimationFragment().newInstance();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, doge).addToBackStack(null).commit();

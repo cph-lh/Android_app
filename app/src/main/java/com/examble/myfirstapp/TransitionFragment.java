@@ -16,8 +16,8 @@ public class TransitionFragment extends Fragment {
 
     private ViewGroup root;
     private Button button;
-    private boolean visible;
     private TextView text;
+    private boolean visible;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_distance">64dp</dimen>
+    <dimen name="fab1_distance">92dp</dimen>
+    <dimen name="fab2_distance">150dp</dimen>
+    <dimen name="fab3_distance">208dp</dimen>
+    <dimen name="fab_text_distance">90dp</dimen>
+    <dimen name="dimen_24">24dp</dimen>
+    <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_10">10dp</dimen>
+    <dimen name="toolbar_size">56dp</dimen>
+</resources>

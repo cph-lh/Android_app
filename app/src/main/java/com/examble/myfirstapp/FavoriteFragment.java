@@ -19,12 +19,9 @@ public class FavoriteFragment extends Fragment {
 
     protected View root;
     protected ImageView favoriteIcon;
-    protected float screenHeight;
     protected Button button;
-    protected boolean down;
-    protected boolean running;
-    protected float newPosition;
-    protected float startPosition;
+    protected boolean down, running;
+    protected float screenHeight, newPosition, startPosition;
     protected Animator animator;
     protected ValueAnimator vAnimator;
     static final String SAVED_TEXT = "buttonText";

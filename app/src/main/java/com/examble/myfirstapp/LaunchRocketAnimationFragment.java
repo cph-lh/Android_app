@@ -19,20 +19,13 @@ import java.util.Random;
 
 public class LaunchRocketAnimationFragment extends Fragment {
 
-    protected View rocket;
-    protected View doge;
-    protected float screenHeight;
-    protected float destination;
-    protected float startPositionY;
+    protected View rocket, doge;
+    protected float screenHeight, destination, startPositionY;
     protected long animationDuration;
     protected boolean running;
     protected int color;
-    protected View root;
-    protected View background;
+    protected View root, background;
     protected ValueAnimator rocketAnimator;
-//    protected ObjectAnimator animY;
-//    protected ObjectAnimator animX;
-//    protected AnimatorSet animatorSet;
     protected Animator animator;
     static final String SAVED_START_POSITION = "startPositionY";
     static final String SAVED_RUN_STATUS = "runStatus";

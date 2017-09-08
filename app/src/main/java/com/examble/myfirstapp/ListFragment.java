@@ -19,7 +19,6 @@ public class ListFragment extends Fragment {
 
     private View root;
     private FloatingActionButton fab;
-//    private ImageView imageView;
     private ListView listView;
     private ListAdapter adapter;
     private ArrayList<ListItem> itemArray;
@@ -45,6 +44,7 @@ public class ListFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+        //*** Add onScrollListener ***
 
         //Adds a new list item when the FAB is clicked and displays a Snackbar with the data added
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +71,6 @@ public class ListFragment extends Fragment {
                 itemArray.add(item);
             }
         }
-
 
         //Sets the adapter
         adapter = new ListAdapter(getActivity(), itemArray);

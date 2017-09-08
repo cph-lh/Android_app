@@ -4,8 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Contact implements Parcelable {
-    private String name;
-    private String info;
+    private String name, info;
     private int imageId;
 
     public Contact(){}
