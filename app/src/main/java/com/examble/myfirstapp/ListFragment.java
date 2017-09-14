@@ -7,10 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,12 +38,27 @@ public class ListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long id) {
                 ListItem item = itemArray.get(position);
-                Toast.makeText(getActivity(), "Selected " + item.getName() + " - shuffled items!", Toast.LENGTH_SHORT).show();
+                Snackbar.make(v, "Selected " + item.getName() + " - shuffled items!", Snackbar.LENGTH_SHORT).show();
                 Collections.shuffle(itemArray);
                 adapter.notifyDataSetChanged();
             }
         });
-        //*** Add onScrollListener ***
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case SCROLL_STATE_IDLE:
+                        fab.show();
+                        break;
+                    default:
+                        fab.hide();
+                        break;
+                }
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
+        });
 
         //Adds a new list item when the FAB is clicked and displays a Snackbar with the data added
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +69,7 @@ public class ListFragment extends Fragment {
                 newItem.setInfo("Info " + (itemArray.size() + 1));
                 itemArray.add(newItem);
                 adapter.notifyDataSetChanged();
-                Snackbar.make(view, "Added " + newItem.getName(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Snackbar.make(view, "Added " + newItem.getName(), Snackbar.LENGTH_SHORT).show();
             }
         });
 

@@ -8,5 +8,7 @@
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="dimen_16">16dp</dimen>
     <dimen name="dimen_10">10dp</dimen>
-    <dimen name="toolbar_size">56dp</dimen>
+    <dimen name="dimen_4">4dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_width">700dp</dimen>
 </resources>

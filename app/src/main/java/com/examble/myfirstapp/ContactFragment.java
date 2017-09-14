@@ -4,16 +4,19 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,15 +28,17 @@ public class ContactFragment extends Fragment {
     private int[] image = {R.drawable.denmark, R.drawable.sweden, R.drawable.norway, R.drawable.italy, R.drawable.france,
             R.drawable.germany, R.drawable.uk, R.drawable.russia};
     private ArrayList<Contact> contactArray;
-    private View root, fabBackground;
+    private View root, backgroundOverlay, toolbarOverlay;
     private RecyclerView recyclerView;
     private FloatingActionButton fab, fab1, fab2, fab3;
-    private TextView text1, text2, text3;
+    private TextView text, text1, text2, text3;
     private ContactAdapter adapter;
+    private Toolbar myToolbar;
     private boolean isOpen;
     private int x, y;
     private long defaultDuration = 200L, shortDuration = 150L;
     final static String SAVED_ARRAY = "contactArray";
+    private static final String TAG = "print";
 
     public static ContactFragment newInstance() {
         return new ContactFragment();
@@ -45,15 +50,19 @@ public class ContactFragment extends Fragment {
 
         //Inflates the layout for this fragment
         root = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        myToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) root.findViewById(R.id.contact_r_view);
         fab = (FloatingActionButton) root.findViewById(R.id.fab);
         fab1 = (FloatingActionButton) root.findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) root.findViewById(R.id.fab2);
         fab3 = (FloatingActionButton) root.findViewById(R.id.fab3);
+        text = (TextView) root.findViewById(R.id.fab_text);
         text1 = (TextView) root.findViewById(R.id.fab1_text);
         text2 = (TextView) root.findViewById(R.id.fab2_text);
         text3 = (TextView) root.findViewById(R.id.fab3_text);
-        fabBackground = root.findViewById(R.id.fab_background);
+        backgroundOverlay = root.findViewById(R.id.background_overlay);
+        toolbarOverlay = getActivity().findViewById(R.id.toolbar_overlay);
+
 
         //Sets the array to a saved array (if any) or else create a new array
         if (savedInstanceState != null) {
@@ -76,8 +85,6 @@ public class ContactFragment extends Fragment {
                 }
             }
         }
-
-//        fab.setImageBitmap();
 
         //Adds a new list item when the FAB is clicked and displays a Snackbar with the data added
         fab.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +120,9 @@ public class ContactFragment extends Fragment {
             }
         });
 
+        //Sets the image of fab3
+        fab3.setImageBitmap(textToBitmap("T", 60, R.color.white));
+
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +133,14 @@ public class ContactFragment extends Fragment {
             }
         });
 
-        fabBackground.setOnClickListener(new View.OnClickListener() {
+        backgroundOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideFABs(defaultDuration);
+            }
+        });
+
+        toolbarOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideFABs(defaultDuration);
@@ -166,14 +183,14 @@ public class ContactFragment extends Fragment {
     //Animates the FABs
     public void animateFAB() {
         if (!isOpen) {
-            showFABS(shortDuration);
+            showFABs();
         } else {
             hideFABs(defaultDuration);
         }
     }
 
     //Shows the FABs with speed depending on the given duration
-    public void showFABS(long duration) {
+    public void showFABs() {
         fab1.animate().translationY(-getResources().getDimension(R.dimen.fab_distance));
         fab2.animate().translationY(-getResources().getDimension(R.dimen.fab_distance));
         fab3.animate().translationY(-getResources().getDimension(R.dimen.fab_distance));
@@ -184,16 +201,25 @@ public class ContactFragment extends Fragment {
         fab1.setVisibility(View.VISIBLE);
         fab2.setVisibility(View.VISIBLE);
         fab3.setVisibility(View.VISIBLE);
-        fabBackground.setVisibility(View.VISIBLE);
+
+        //Shows FAB-menu background overlay
+//            myToolbar.setVisibility(View.GONE);
+        ViewCompat.setElevation(myToolbar, 0);
+        toolbarOverlay.setVisibility(View.VISIBLE);
+        backgroundOverlay.setVisibility(View.VISIBLE);
+
+        text.setVisibility(View.VISIBLE);
         text1.setVisibility(View.VISIBLE);
         text2.setVisibility(View.VISIBLE);
         text3.setVisibility(View.VISIBLE);
+
         isOpen = true;
     }
 
     //Hides the FABs with speed depending on the given duration
     public void hideFABs(long duration) {
 
+        text.setVisibility(View.GONE);
         text1.setVisibility(View.GONE);
         text2.setVisibility(View.GONE);
         text3.setVisibility(View.GONE);
@@ -233,7 +259,12 @@ public class ContactFragment extends Fragment {
 
         //Re-rotates the FAB
         fab.animate().rotationBy(-45);
-        fabBackground.setVisibility(View.GONE);
+
+        //Hides FAB-menu background overlay
+//        myToolbar.setVisibility(View.VISIBLE);
+        toolbarOverlay.setVisibility(View.GONE);
+        backgroundOverlay.setVisibility(View.GONE);
+        ViewCompat.setElevation(myToolbar, 12);
 
         //Reset the FABs position
         fab1.animate().translationY(0);
@@ -242,7 +273,22 @@ public class ContactFragment extends Fragment {
         isOpen = false;
     }
 
-//    public static Bitmap textToBitmap(String text, float textSize, R.color.white)
+    public static Bitmap textToBitmap(String text, float textSize, int textColor) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextSize(textSize);
+        paint.setColor(textColor);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setElegantTextHeight(true);
+        paint.setTextAlign(Paint.Align.LEFT);
+        float baseline = -paint.ascent() + 15f; // ascent() is negative
+        int width = (int) (paint.measureText(text) + 10f); // round
+        int height = (int) (baseline + paint.descent() + 10f);
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(image);
+        canvas.drawText(text, 5, baseline, paint);
+        return image;
+    }
 
 //    /*
 //        //Show the fabs
