@@ -1,4 +1,4 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -53,15 +53,15 @@ public class ListItem implements Parcelable{
         out.writeInt(imageId);
     }
 
-    public static final Creator<com.examble.myfirstapp.ListItem> CREATOR = new Creator<com.examble.myfirstapp.ListItem>() {
+    public static final Creator<com.example.myfirstapp.ListItem> CREATOR = new Creator<com.example.myfirstapp.ListItem>() {
         @Override
-        public com.examble.myfirstapp.ListItem createFromParcel(Parcel in) {
-            return new com.examble.myfirstapp.ListItem(in);
+        public com.example.myfirstapp.ListItem createFromParcel(Parcel in) {
+            return new com.example.myfirstapp.ListItem(in);
         }
 
         @Override
-        public com.examble.myfirstapp.ListItem[] newArray(int size) {
-            return new com.examble.myfirstapp.ListItem[size];
+        public com.example.myfirstapp.ListItem[] newArray(int size) {
+            return new com.example.myfirstapp.ListItem[size];
         }
     };
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_examble"
-        android:title="@string/examble"/>
+    <item android:id="@+id/menu_example"
+        android:title="@string/example"/>
 
     <item
         android:id="@+id/menu_favorite"

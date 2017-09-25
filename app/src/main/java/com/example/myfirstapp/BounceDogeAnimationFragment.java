@@ -1,4 +1,4 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,15 +18,15 @@ import java.util.Random;
 
 public class BounceDogeAnimationFragment extends Fragment {
 
-    protected View doge;
-    protected float startPositionY, startPositionX;
-    protected long animationDuration;
-    protected boolean running;
-    protected int color;
-    protected View root, background;
-    protected ObjectAnimator animY, animX;
-    protected Animator animator;
-    protected AnimatorSet animatorSet;
+    private View doge;
+    private float startPositionY, startPositionX;
+    private long animationDuration;
+    private boolean running;
+    private int color;
+    private View root, background;
+    private ObjectAnimator animY, animX;
+    private Animator animator;
+    private AnimatorSet animatorSet;
     static final String SAVED_RUN_STATUS = "runStatus";
     static final String SAVED_ANIMATION_DURATION = "animationDuration";
     static final String SAVED_BACKGROUND_COLOR = "color";

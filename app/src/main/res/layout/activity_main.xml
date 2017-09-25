@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.examble.myfirstapp.MainActivity">
+    tools:context="com.example.myfirstapp.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -20,8 +20,8 @@
     <View
         android:id="@+id/toolbar_overlay"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="@color/fabBackground"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/overlay"
         android:clickable="false"
         android:fitsSystemWindows="true"
         android:visibility="gone"
@@ -32,6 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@id/toolbar"
         />
 </RelativeLayout>

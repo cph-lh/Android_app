@@ -1,4 +1,4 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 
 import android.app.Fragment;

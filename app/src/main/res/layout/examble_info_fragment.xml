@@ -13,7 +13,7 @@
         android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/examble_info_title"/>
+        android:text="@string/example_info_title"/>
 
     <TextView style="?android:textAppearanceSmall"
         android:textColor="@color/white"
@@ -21,6 +21,6 @@
         android:lineSpacingMultiplier="1.2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/examble_info" />
+        android:text="@string/example_info" />
 
 </LinearLayout>

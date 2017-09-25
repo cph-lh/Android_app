@@ -1,9 +1,7 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.graphics.Color;
@@ -19,14 +17,14 @@ import java.util.Random;
 
 public class LaunchRocketAnimationFragment extends Fragment {
 
-    protected View rocket, doge;
-    protected float screenHeight, destination, startPositionY;
-    protected long animationDuration;
-    protected boolean running;
-    protected int color;
-    protected View root, background;
-    protected ValueAnimator rocketAnimator;
-    protected Animator animator;
+    private View rocket, doge;
+    private float screenHeight, destination, startPositionY;
+    private long animationDuration;
+    private boolean running;
+    private int color;
+    private View root, background;
+    private ValueAnimator rocketAnimator;
+    private Animator animator;
     static final String SAVED_START_POSITION = "startPositionY";
     static final String SAVED_RUN_STATUS = "runStatus";
     static final String SAVED_ANIMATION_DURATION = "animationDuration";

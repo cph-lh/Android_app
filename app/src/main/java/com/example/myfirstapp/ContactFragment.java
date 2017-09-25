@@ -1,10 +1,11 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,7 +34,7 @@ public class ContactFragment extends Fragment {
     private FloatingActionButton fab, fab1, fab2, fab3;
     private TextView text, text1, text2, text3;
     private ContactAdapter adapter;
-    private Toolbar myToolbar;
+    private Toolbar toolbar;
     private boolean isOpen;
     private int x, y;
     private long defaultDuration = 200L, shortDuration = 150L;
@@ -50,7 +51,7 @@ public class ContactFragment extends Fragment {
 
         //Inflates the layout for this fragment
         root = inflater.inflate(R.layout.contact_list_fragment, container, false);
-        myToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) root.findViewById(R.id.contact_r_view);
         fab = (FloatingActionButton) root.findViewById(R.id.fab);
         fab1 = (FloatingActionButton) root.findViewById(R.id.fab1);
@@ -203,10 +204,10 @@ public class ContactFragment extends Fragment {
         fab3.setVisibility(View.VISIBLE);
 
         //Shows FAB-menu background overlay
-//            myToolbar.setVisibility(View.GONE);
-        ViewCompat.setElevation(myToolbar, 0);
+        toolbar.setElevation(0);
         toolbarOverlay.setVisibility(View.VISIBLE);
         backgroundOverlay.setVisibility(View.VISIBLE);
+
 
         text.setVisibility(View.VISIBLE);
         text1.setVisibility(View.VISIBLE);
@@ -261,10 +262,9 @@ public class ContactFragment extends Fragment {
         fab.animate().rotationBy(-45);
 
         //Hides FAB-menu background overlay
-//        myToolbar.setVisibility(View.VISIBLE);
         toolbarOverlay.setVisibility(View.GONE);
+        toolbar.setElevation(12);
         backgroundOverlay.setVisibility(View.GONE);
-        ViewCompat.setElevation(myToolbar, 12);
 
         //Reset the FABs position
         fab1.animate().translationY(0);

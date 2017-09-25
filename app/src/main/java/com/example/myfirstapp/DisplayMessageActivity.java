@@ -1,4 +1,4 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;

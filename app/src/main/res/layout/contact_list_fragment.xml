@@ -22,9 +22,11 @@
             android:elevation="@dimen/dimen_4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fabBackground"
+            android:background="@color/overlay"
             android:clickable="false"
             android:visibility="gone"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             tools:visibility="visible"/>
 
         <TextView
@@ -155,5 +157,6 @@
             android:scaleType="center"
             android:src="@drawable/ic_add" />
     </android.support.design.widget.CoordinatorLayout>
+
 
 </RelativeLayout>

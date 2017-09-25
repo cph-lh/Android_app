@@ -1,4 +1,4 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 
 import android.animation.Animator;
@@ -17,13 +17,13 @@ import android.widget.ImageView;
 
 public class FavoriteFragment extends Fragment {
 
-    protected View root;
-    protected ImageView favoriteIcon;
-    protected Button button;
-    protected boolean down, running;
-    protected float screenHeight, newPosition, startPosition;
-    protected Animator animator;
-    protected ValueAnimator vAnimator;
+    private View root;
+    private ImageView favoriteIcon;
+    private Button button;
+    private boolean down, running;
+    private float screenHeight, newPosition, startPosition;
+    private Animator animator;
+    private ValueAnimator vAnimator;
     static final String SAVED_TEXT = "buttonText";
     static final String SAVED_VISIBILITY = "imageVisibility";
     private static final String TAG = "print";

@@ -10,5 +10,5 @@
     <color name="colorFAB1">#2196F3</color>
     <color name="colorFAB2">#24998e</color>
     <color name="colorFAB3">#E040FB</color>
-    <color name="fabBackground">#ccffffff</color>
+    <color name="overlay">#999E9E9E</color>
 </resources>

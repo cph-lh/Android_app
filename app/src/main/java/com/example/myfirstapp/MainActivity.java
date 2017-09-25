@@ -1,4 +1,4 @@
-package com.examble.myfirstapp;
+package com.example.myfirstapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         if (savedInstanceState == null) {
-            ContactFragment startFragment = ContactFragment.newInstance();
+            TransitionFragment startFragment = TransitionFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.fragment_container, startFragment).addToBackStack(null).commit();
-            tag = 8;
+            tag = 6;
         }
     }
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else return false;
 
-            case R.id.menu_examble:
+            case R.id.menu_example:
                 if (tag != 3) {
                     ExambleFragment examble = new ExambleFragment();
                     getFragmentManager().beginTransaction()
