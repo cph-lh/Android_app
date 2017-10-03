@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         if (savedInstanceState == null) {
-            TransitionFragment startFragment = TransitionFragment.newInstance();
+            PopUpFragment startFragment = PopUpFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.fragment_container, startFragment).addToBackStack(null).commit();
-            tag = 6;
+            tag = 9;
         }
     }
 
@@ -35,87 +35,132 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_favorite:
+                FavoriteFragment favorite = new FavoriteFragment();
                 if (tag != 2) {
-                    FavoriteFragment favorite = new FavoriteFragment();
                     getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
+                            .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, favorite).addToBackStack(null).commit();
                     tag = 2;
                     return true;
-                } else return false;
+                } else if (tag == 2) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, favorite)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             case R.id.menu_example:
+                ExampleFragment example = new ExampleFragment();
                 if (tag != 3) {
-                    ExambleFragment examble = new ExambleFragment();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
-                            .replace(R.id.fragment_container, examble).addToBackStack(null).commit();
+                            .replace(R.id.fragment_container, example).addToBackStack(null).commit();
                     tag = 3;
                     return true;
-                } else return false;
+                } else if (tag == 3) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, example)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             case R.id.menu_message:
+                MessageFragment message = new MessageFragment();
                 if (tag != 4) {
-                    MessageFragment message = new MessageFragment();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, message).addToBackStack(null).commit();
                     tag = 4;
                     return true;
-                } else return false;
+                } else if (tag == 4) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, message)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             case R.id.menu_launch_rocket:
+                LaunchRocketAnimationFragment rocket = new LaunchRocketAnimationFragment();
                 if (tag != 5) {
-                    LaunchRocketAnimationFragment rocket = new LaunchRocketAnimationFragment();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, rocket).addToBackStack(null).commit();
                     tag = 5;
                     return true;
-                } else return false;
+                } else if (tag == 5) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, rocket)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             case R.id.menu_bounce_doge:
+                BounceDogeAnimationFragment doge = BounceDogeAnimationFragment.newInstance();
                 if (tag != 1) {
-                    BounceDogeAnimationFragment doge = BounceDogeAnimationFragment.newInstance();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, doge).addToBackStack(null).commit();
                     tag = 1;
                     return true;
-                } else return false;
+                } else if (tag == 1) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, doge)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             case R.id.menu_transitions:
+                TransitionFragment transitions = TransitionFragment.newInstance();
                 if (tag != 6) {
-                    TransitionFragment transitions = new TransitionFragment();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, transitions).addToBackStack(null).commit();
                     tag = 6;
                     return true;
-                } else return false;
+                } else if (tag == 6) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, transitions)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             case R.id.menu_list:
+                ListFragment list = new ListFragment();
                 if (tag != 7) {
-                    ListFragment list = new ListFragment();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, list).addToBackStack(null).commit();
                     tag = 7;
                     return true;
-                } else return false;
+                } else if (tag == 7) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, list)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             case R.id.menu_contact_list:
+                ContactFragment contactList = ContactFragment.newInstance();
                 if (tag != 8) {
-                    ContactFragment contactList = new ContactFragment();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
                             .replace(R.id.fragment_container, contactList).addToBackStack(null).commit();
                     tag = 8;
                     return true;
-                } else return false;
+                } else if (tag == 8) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, contactList)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
+            case R.id.menu_pop_up:
+                PopUpFragment popUp = PopUpFragment.newInstance();
+                if (tag != 9) {
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
+                            .replace(R.id.fragment_container, popUp).addToBackStack(null).commit();
+                    tag = 9;
+                    return true;
+                } else if (tag == 9) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, popUp)
+                            .addToBackStack(null).commit();
+                    return true;
+                }
 
             default:
-                // If we got here, the user's action was not recognized.
+                // Isf we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }

@@ -18,10 +18,20 @@
         tools:visibility="visible"/>
 
     <View
-        android:id="@+id/toolbar_overlay"
+        android:id="@+id/toolbar_overlay_light"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/overlay"
+        android:background="@color/overlay_light"
+        android:clickable="false"
+        android:fitsSystemWindows="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <View
+        android:id="@+id/toolbar_overlay_dark"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/overlay_dark"
         android:clickable="false"
         android:fitsSystemWindows="true"
         android:visibility="gone"

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ExambleInfoFragment extends Fragment {
+public class ExampleFragment extends Fragment {
 
     private View root;
 
@@ -14,7 +14,7 @@ public class ExambleInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        root = inflater.inflate(R.layout.examble_info_fragment, container, false);
+        root = inflater.inflate(R.layout.example_fragment, container, false);
         setCameraDistance();
 
         root.setOnClickListener(new View.OnClickListener() {
@@ -27,13 +27,13 @@ public class ExambleInfoFragment extends Fragment {
     }
 
     //Starts the card flip animation
-    protected void onStartAnimation() {
+    private void onStartAnimation() {
         getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.card_flip_left_in, R.animator.card_flip_left_out)
-                .replace(R.id.fragment_container, new ExambleFragment()).commit();
+                .setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out)
+                .replace(R.id.fragment_container, new ExampleInfoFragment()).commit();
     }
 
-    //Makes the flip animation look smoother
+    //Makes the animation of the flip look smoother
     private void setCameraDistance() {
         int distance = 8000;
         float scale = getResources().getDisplayMetrics().density * distance;

@@ -11,23 +11,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class TransitionFragment extends Fragment {
+public class PopUpFragment extends Fragment {
 
-    private ViewGroup root, layout;
-    private View menu;
-    private Button button;
-    private TextView text;
+    private ViewGroup root;
     private FloatingActionButton fab;
-    private boolean menuIsOpen, visible, isAnimating;
+    private boolean menuIsOpen, isAnimating;
     private View backgroundOverlay, toolbarOverlay;
     private ObjectAnimator objectAnimator;
     private Animator revealAnimation, hideAnimation;
@@ -38,32 +35,23 @@ public class TransitionFragment extends Fragment {
     private final float scaleDown = 1F;
     private final long duration = 1000;
     private final FastOutSlowInInterpolator interpolator = new FastOutSlowInInterpolator();
+    private DisplayMetrics mDisplayMetrics;
 
-    public static TransitionFragment newInstance() {
-        return new TransitionFragment();
+    public static PopUpFragment newInstance() {
+        return new PopUpFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        root = (ViewGroup) inflater.inflate(R.layout.transition_fragment, container, false);
-        layout = (ViewGroup) root.findViewById(R.id.menu_layout);
-        text = (TextView) root.findViewById(R.id.text);
+        setDisplayMetrics();
+
+        root = (ViewGroup) inflater.inflate(R.layout.pop_up_fragment, container, false);
         fab = (FloatingActionButton) root.findViewById(R.id.fab);
-        menu = root.findViewById(R.id.fab_menu);
         backgroundOverlay = root.findViewById(R.id.background_overlay);
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbarOverlay = getActivity().findViewById(R.id.toolbar_overlay_dark);
-        button = (Button) root.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TransitionManager.beginDelayedTransition(root);
-                visible = !visible;
-                text.setVisibility(visible ? View.VISIBLE : View.GONE);
-            }
-        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +75,11 @@ public class TransitionFragment extends Fragment {
                 }
             }
         });
-
         return root;
+    }
+
+    public void setDisplayMetrics() {
+        mDisplayMetrics = getResources().getDisplayMetrics();
     }
 
     public void animateMenu() {
@@ -103,7 +94,7 @@ public class TransitionFragment extends Fragment {
     }
 
     public void showMenu() {
-        isAnimating = true;
+        /*isAnimating = true;
 
         int [] location = new int [2];
         //Arc animation
@@ -138,7 +129,7 @@ public class TransitionFragment extends Fragment {
         float endRadius = (float) Math.hypot(menu.getWidth(), menu.getHeight());
         int centerX = menu.getWidth() / 2 + (fab.getWidth() / 2);
         int centerY = menu.getHeight() / 2 + (fab.getHeight() / 2);
-        revealAnimation = ViewAnimationUtils.createCircularReveal(menu,  centerX, centerY, 168f, endRadius);
+        revealAnimation = ViewAnimationUtils.createCircularReveal(menu, centerX, centerY, 168f, endRadius);
         revealAnimation.setInterpolator(interpolator);
         revealAnimation.setDuration(duration);
 
@@ -162,11 +153,11 @@ public class TransitionFragment extends Fragment {
                 menuIsOpen = true;
             }
         });
-        showSet.start();
+        showSet.start();*/
     }
 
     public void hideMenu() {
-        isAnimating = true;
+        /*isAnimating = true;
 
         //Hides FAB menu
         int centerX = menu.getWidth() / 2 + (fab.getWidth() / 2);
@@ -178,7 +169,7 @@ public class TransitionFragment extends Fragment {
         hideAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                menu.setVisibility(View.GONE);
+//                menu.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 //Scales down the FAB
                 scaleFAB(scaleDown, interpolator, duration);
@@ -221,7 +212,7 @@ public class TransitionFragment extends Fragment {
                 isAnimating = false;
             }
         });
-        hideSet.start();
+        hideSet.start();*/
     }
 
     public void scaleFAB(float constant, Interpolator interpolator, long duration) {

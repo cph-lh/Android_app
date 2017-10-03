@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ public class ContactFragment extends Fragment {
     private long defaultDuration = 200L, shortDuration = 150L;
     final static String SAVED_ARRAY = "contactArray";
     private static final String TAG = "print";
+    private boolean isAnimating;
 
     public static ContactFragment newInstance() {
         return new ContactFragment();
@@ -62,7 +63,7 @@ public class ContactFragment extends Fragment {
         text2 = (TextView) root.findViewById(R.id.fab2_text);
         text3 = (TextView) root.findViewById(R.id.fab3_text);
         backgroundOverlay = root.findViewById(R.id.background_overlay);
-        toolbarOverlay = getActivity().findViewById(R.id.toolbar_overlay);
+        toolbarOverlay = getActivity().findViewById(R.id.toolbar_overlay_light);
 
 
         //Sets the array to a saved array (if any) or else create a new array
@@ -71,19 +72,17 @@ public class ContactFragment extends Fragment {
         } else {
             contactArray = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
+                Contact c = new Contact();
                 if (i < names.length) {
-                    Contact c = new Contact();
                     c.setName(names[i]);
                     c.setInfo(info[i]);
                     c.setImageId(image[i]);
-                    contactArray.add(c);
                 } else {
-                    Contact c = new Contact();
                     c.setName("Contact " + (i + 1));
                     c.setInfo("Info " + (i + 1));
                     c.setImageId(R.drawable.doge);
-                    contactArray.add(c);
                 }
+                contactArray.add(c);
             }
         }
 
@@ -114,7 +113,7 @@ public class ContactFragment extends Fragment {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isOpen) {
+                if (!isAnimating && isOpen) {
                     hideFABs(defaultDuration);
                 }
                 Snackbar.make(v, "FAB 2 selected", Snackbar.LENGTH_SHORT).show();
@@ -122,12 +121,13 @@ public class ContactFragment extends Fragment {
         });
 
         //Sets the image of fab3
-        fab3.setImageBitmap(textToBitmap("T", 60, R.color.white));
+
+        fab3.setImageBitmap(textToBitmap("T", 60, Color.WHITE));
 
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isOpen) {
+                if (!isAnimating && isOpen) {
                     hideFABs(defaultDuration);
                 }
                 Snackbar.make(v, "FAB 3 selected", Snackbar.LENGTH_SHORT).show();
@@ -157,7 +157,7 @@ public class ContactFragment extends Fragment {
                         fab.show();
                         break;
                     default:
-                        if (isOpen) {
+                        if (!isAnimating && isOpen) {
                             hideFABs(shortDuration);
                         }
                         fab.hide();
@@ -183,21 +183,30 @@ public class ContactFragment extends Fragment {
 
     //Animates the FABs
     public void animateFAB() {
-        if (!isOpen) {
-            showFABs();
-        } else {
-            hideFABs(defaultDuration);
-        }
+        if (!isAnimating) {
+            if (!isOpen) {
+                showFABs();
+            } else {
+                hideFABs(defaultDuration);
+            }
+        } //Do nothing
     }
 
     //Shows the FABs with speed depending on the given duration
     public void showFABs() {
+        isAnimating  = true;
+
         fab1.animate().translationY(-getResources().getDimension(R.dimen.fab_distance));
         fab2.animate().translationY(-getResources().getDimension(R.dimen.fab_distance));
         fab3.animate().translationY(-getResources().getDimension(R.dimen.fab_distance));
 
         //Rotates the FAB
-        fab.animate().rotationBy(45);
+        fab.animate().rotationBy(45).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+               isAnimating = false;
+            }
+        });
 
         fab1.setVisibility(View.VISIBLE);
         fab2.setVisibility(View.VISIBLE);
@@ -214,11 +223,13 @@ public class ContactFragment extends Fragment {
         text2.setVisibility(View.VISIBLE);
         text3.setVisibility(View.VISIBLE);
 
+//        isAnimating  = false;
         isOpen = true;
     }
 
     //Hides the FABs with speed depending on the given duration
     public void hideFABs(long duration) {
+        isAnimating = true;
 
         text.setVisibility(View.GONE);
         text1.setVisibility(View.GONE);
@@ -239,21 +250,18 @@ public class ContactFragment extends Fragment {
         fab1Hide.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
                 fab1.setVisibility(View.GONE);
             }
         });
         fab2Hide.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
                 fab2.setVisibility(View.GONE);
             }
         });
         fab3Hide.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
                 fab3.setVisibility(View.GONE);
             }
         });
@@ -269,7 +277,13 @@ public class ContactFragment extends Fragment {
         //Reset the FABs position
         fab1.animate().translationY(0);
         fab2.animate().translationY(0);
-        fab3.animate().translationY(0);
+        fab3.animate().translationY(0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isAnimating = false;
+            }
+        });
+
         isOpen = false;
     }
 

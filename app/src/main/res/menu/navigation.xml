@@ -21,6 +21,9 @@
     <item android:id="@+id/menu_transitions"
         android:title="@string/transitions"/>
 
+    <item android:id="@+id/menu_pop_up"
+        android:title="@string/pop_up"/>
+
     <item android:id="@+id/menu_list"
         android:title="@string/list"/>
 

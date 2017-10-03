@@ -3,12 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
-    <color name="white">#ffffff</color>
+    <color name="white">#ffffffff</color>
     <color name="black">#000000</color>
     <color name="backgroundDark">#3050F9</color>
     <color name="background">#5C6BC0</color>
     <color name="colorFAB1">#2196F3</color>
     <color name="colorFAB2">#24998e</color>
     <color name="colorFAB3">#E040FB</color>
-    <color name="overlay">#999E9E9E</color>
+    <color name="overlay_dark">#999E9E9E</color>
+    <color name="overlay_light">#CCFFFFFF</color>
 </resources>
