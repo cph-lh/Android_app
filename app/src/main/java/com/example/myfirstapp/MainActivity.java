@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         if (savedInstanceState == null) {
-            PopUpFragment startFragment = PopUpFragment.newInstance();
+            TransitionFragment startFragment = TransitionFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.fragment_container, startFragment).addToBackStack(null).commit();
-            tag = 9;
+            tag = 6;
         }
     }
 
