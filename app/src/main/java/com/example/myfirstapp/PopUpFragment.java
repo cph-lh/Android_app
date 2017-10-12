@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.os.Bundle;
@@ -15,15 +16,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.Toolbar;
-import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.widget.Button;
-import android.widget.TextView;
+
+import static android.R.attr.endX;
 
 public class PopUpFragment extends Fragment {
 
@@ -31,13 +30,20 @@ public class PopUpFragment extends Fragment {
     private View menu;
     private FloatingActionButton fab;
     private boolean menuIsOpen, isAnimating;
+    private static boolean animationStarted;
     private View backgroundOverlay, toolbarOverlay;
-    private float startX, startY;
+    private float startX, startY, endX, controlX;
     private Toolbar toolbar;
     private final float scaleUp = 1.5F;
     private final float scaleDown = 1F;
-    private final long duration = 1000;
+    private final long duration = 600;
     private final FastOutSlowInInterpolator interpolator = new FastOutSlowInInterpolator();
+    static final String MENU_STATUS = "menuStatus";
+    static final String MENU_VISIBILITY = "menuVisibility";
+    static final String FAB_VISIBILITY = "fabVisibility";
+    static final String B_OVERLAY_VISIBILITY = "backgroundOverlayVisibility";
+    static final String T_OVERLAY_VISIBILITY = "toolbarOverlayVisibility";
+    static final String TOOLBAR_ELEVATION = "toolbarElevation";
 
     public static PopUpFragment newInstance() {
         return new PopUpFragment();
@@ -75,6 +81,30 @@ public class PopUpFragment extends Fragment {
                 }
             }
         });
+
+//        if (savedInstanceState != null) {
+//            menuIsOpen = savedInstanceState.getBoolean(MENU_STATUS);
+//            toolbar.setElevation(savedInstanceState.getFloat(TOOLBAR_ELEVATION));
+//
+//            if (savedInstanceState.getInt(FAB_VISIBILITY) == 0) {
+//                fab.setVisibility(View.VISIBLE);
+//            } else fab.setVisibility(View.GONE);
+//
+//            //Menu visibility
+//            if (savedInstanceState.getInt(MENU_VISIBILITY) == 0) {
+//                menu.setVisibility(View.VISIBLE);
+//            } else menu.setVisibility(View.GONE);
+//
+//            //
+//            if (savedInstanceState.getInt(B_OVERLAY_VISIBILITY) == 0) {
+//                backgroundOverlay.setVisibility(View.VISIBLE);
+//            } else backgroundOverlay.setVisibility(View.GONE);
+//
+//            if (savedInstanceState.getInt(T_OVERLAY_VISIBILITY) == 0) {
+//                toolbarOverlay.setVisibility(View.VISIBLE);
+//            } else toolbarOverlay.setVisibility(View.GONE);
+//        }
+
         return root;
     }
 
@@ -89,60 +119,107 @@ public class PopUpFragment extends Fragment {
         //Do nothing
     }
 
+//    @Override
+//    public void onSaveInstanceState(Bundle savedState) {
+//        super.onSaveInstanceState(savedState);
+//        savedState.putBoolean(MENU_STATUS, menuIsOpen);
+//        savedState.putInt(FAB_VISIBILITY, fab.getVisibility());
+//        savedState.putInt(MENU_VISIBILITY, menu.getVisibility());
+//        savedState.putInt(B_OVERLAY_VISIBILITY, backgroundOverlay.getVisibility());
+//        savedState.putInt(T_OVERLAY_VISIBILITY, toolbarOverlay.getVisibility());
+//        savedState.putFloat(TOOLBAR_ELEVATION, toolbar.getElevation());
+//    }
+
+    //Animates the FAB to show a menu
     public void showMenu() {
         isAnimating = true;
 
+        //Gets margins of the FAB
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
+        float bottomMargin = layoutParams.bottomMargin;
+        float rightMargin = layoutParams.rightMargin;
+        float leftMargin = layoutParams.leftMargin;
+
+        //Detects layout direction and screen orientation
+        Configuration config = getResources().getConfiguration();
+
+        //Start values change depending on layout direction (in rare cases RTL is used)
+        if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+            startX = fab.getWidth() / 2 - leftMargin;
+            startY = root.getHeight() - fab.getHeight() - bottomMargin;
+
+        } else {
+            startX = root.getWidth() - fab.getWidth() - rightMargin;
+            startY = root.getHeight() - fab.getHeight() - bottomMargin;
+        }
+
+        //Defines start points for the Path
         final Path path = new Path();
-
-        //Defines start points
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
-        float bottomMargin = lp.bottomMargin;
-        float rightMargin = lp.rightMargin;
-
-        startX = root.getWidth() - fab.getWidth() - rightMargin;
-        startY = root.getHeight() - fab.getHeight() - bottomMargin;
         path.moveTo(startX, startY);
 
         //Defines control points and end points for the curve
-        float controlX = root.getWidth() / 2;
         float controlY = startY;
-        float endX = root.getWidth() /2;
-        float endY = root.getHeight() / 2;
+        float endY = root.getHeight() * 0.5f;
+
+        //X values change depending on screen orientation (1 = portrait)
+        if (config.orientation == 1) {
+            controlX = root.getWidth() * 0.5f;
+            endX = root.getWidth() * 0.5f;
+        } else {
+            if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                controlX = root.getWidth() * 0.25f;
+                endX = root.getWidth() * 0.25f;
+            } else {
+                controlX = root.getWidth() * 0.75f;
+                endX = root.getWidth() * 0.75f;
+            }
+        }
         path.quadTo(controlX, controlY, endX, endY);
 
         //Moves the FAB along the defined path
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(fab, View.X, View.Y, path);
-        objectAnimator.setDuration(duration);
-        objectAnimator.setInterpolator(interpolator);
-
-        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ObjectAnimator pathAnimator = ObjectAnimator.ofFloat(fab, View.X, View.Y, path);
+        pathAnimator.setDuration(duration);
+        pathAnimator.setInterpolator(interpolator);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 fab.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.blendARGB(
-                        ContextCompat.getColor(getActivity(),R.color.colorAccent), Color.WHITE,
+                        ContextCompat.getColor(getActivity(), R.color.colorAccent), Color.WHITE,
                         animation.getAnimatedFraction())));
+                if (animation.getAnimatedFraction() > 0.7f && !animationStarted) {
+                    animationStarted = true;
+                    //Reveal animation
+                    float endRadius = (float) Math.hypot(menu.getWidth(), menu.getHeight());
+                    int centerX = (int) (Math.abs(fab.getX() - menu.getX()));
+                    int centerY = (int) (Math.abs(fab.getY() - menu.getY()));
+//                    Log.e("enter ", centerX + " " + menu.getWidth() + " " + centerY + " " + menu.getHeight() + " ");
+                    Animator revealAnimator = ViewAnimationUtils.createCircularReveal(menu, centerX, centerY, 120f, endRadius);
+                    revealAnimator.setInterpolator(interpolator);
+                    revealAnimator.setDuration(duration);
+                    revealAnimator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            fab.setVisibility(View.GONE);
+                            menu.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            animationStarted = false;
+                        }
+                    });
+                    revealAnimator.start();
+                }
             }
         });
 
-        //Reveal animation
-        float endRadius = (float) Math.hypot(menu.getWidth(), menu.getHeight());
-        int centerX = (int) (menu.getWidth() * 0.4f);
-        int centerY = (int) (menu.getHeight() * 0.4f);
-        Animator revealAnimation = ViewAnimationUtils.createCircularReveal(menu, centerX, centerY, 125f, endRadius);
-        revealAnimation.setInterpolator(interpolator);
-        revealAnimation.setDuration(duration);
-        revealAnimation.setStartDelay(700);
-        revealAnimation.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                fab.setVisibility(View.GONE);
-                menu.setVisibility(View.VISIBLE);
-            }
-        });
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(fab, View.ALPHA, 1f, 0.1f);
+        alphaAnimator.setDuration(duration);
 
         //Sets play order and starts the animations
         AnimatorSet showSet = new AnimatorSet();
-        showSet.playTogether(objectAnimator, revealAnimation);
+        showSet.playTogether(pathAnimator, alphaAnimator);
         showSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -164,56 +241,78 @@ public class PopUpFragment extends Fragment {
         showSet.start();
     }
 
+    //Animates the menu back into a FAB
     public void hideMenu() {
         isAnimating = true;
 
-        //Hides FAB menu
-        int centerX = (int) (menu.getWidth() * 0.4f);
-        int centerY = (int) (menu.getHeight() * 0.4f);
-        float startRadius = (float) Math.hypot(menu.getWidth(), menu.getHeight());
-        Animator hideAnimation = ViewAnimationUtils.createCircularReveal(menu, centerX, centerY, startRadius, 120f);
-        hideAnimation.setInterpolator(interpolator);
-        hideAnimation.setDuration(duration);
-        hideAnimation.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                menu.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                //Scales down the FAB
-                scaleFAB(scaleDown, interpolator, duration);
-            }
-        });
+        //Detects layout direction and screen orientation
+        Configuration config = getResources().getConfiguration();
 
         final Path path = new Path();
 
-        //Defines start points
+        //Defines start points for the Path
         float newStartX = fab.getX();
         float newStartY = fab.getY();
         path.moveTo(newStartX, newStartY);
 
         //Defines control points and end points for the curve
-        float controlX = root.getWidth() / 2;
         float controlY = startY;
         float endX = startX;
         float endY = startY;
+
+        //ControlX value depends on screen orientation
+        if (config.orientation == 1) {
+            controlX = root.getWidth() * 0.5f;
+        } else if (config.orientation == 2) {
+            if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                controlX = root.getWidth() * 0.25f;
+            } else {
+                controlX = root.getWidth() * 0.75f;
+            }
+        }
         path.quadTo(controlX, controlY, endX, endY);
 
-        ObjectAnimator  objectAnimator = ObjectAnimator.ofFloat(fab, View.X, View.Y, path);
-        objectAnimator.setDuration(duration);
-        objectAnimator.setInterpolator(interpolator);
-        objectAnimator.setStartDelay(750);
-        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ObjectAnimator pathAnimator = ObjectAnimator.ofFloat(fab, View.X, View.Y, path);
+        pathAnimator.setDuration(1000);
+        pathAnimator.setInterpolator(interpolator);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 fab.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.blendARGB(
-                        Color.WHITE, ContextCompat.getColor(getActivity(),R.color.colorAccent),
+                        Color.WHITE, ContextCompat.getColor(getActivity(), R.color.colorAccent),
                         animation.getAnimatedFraction())));
+                if (animation.getAnimatedFraction() > 0.3f && !animationStarted) {
+                    animationStarted = true;
+                    //Hides FAB menu
+                    int centerX = (int) (Math.abs(fab.getX() - menu.getX()));
+                    int centerY = (int) (Math.abs(fab.getY() - menu.getY()));
+                    float startRadius = (float) Math.hypot(menu.getWidth(), menu.getHeight());
+                    Animator hideAnimator = ViewAnimationUtils.createCircularReveal(menu, centerX, centerY, startRadius, 120f);
+                    hideAnimator.setInterpolator(interpolator);
+                    hideAnimator.setDuration(duration);
+                    hideAnimator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            menu.setVisibility(View.GONE);
+                            fab.setVisibility(View.VISIBLE);
+                            //Scales down the FAB
+                            scaleFAB(scaleDown, interpolator, duration);
+                            animationStarted = false;
+                        }
+                    });
+                    hideAnimator.start();
+                    //fab.setVisibility(View.VISIBLE);
+                }
             }
         });
 
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(fab, View.ALPHA, 0.1f, 1f);
+        alphaAnimator.setDuration(duration);
+        alphaAnimator.setStartDelay(200);
+
         //Sets play order and starts the animations
         AnimatorSet hideSet = new AnimatorSet();
-        hideSet.playTogether(hideAnimation, objectAnimator);
+        hideSet.playTogether(pathAnimator, alphaAnimator);
         hideSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

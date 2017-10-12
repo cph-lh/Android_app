@@ -65,7 +65,7 @@ public class LaunchRocketAnimationFragment extends Fragment {
             }
         }
 
-        //Starts the rocket animation and the bagground animation when the screen is clicked
+        //Starts the rocket animation and the background animation when the screen is clicked
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
