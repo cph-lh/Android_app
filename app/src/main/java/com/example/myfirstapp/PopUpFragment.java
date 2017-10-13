@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.widget.ScrollView;
 
 import static android.R.attr.endX;
 
@@ -30,6 +31,7 @@ public class PopUpFragment extends Fragment {
     private View menu;
     private FloatingActionButton fab;
     private boolean menuIsOpen, isAnimating;
+    private ScrollView sv;
     private static boolean animationStarted;
     private View backgroundOverlay, toolbarOverlay;
     private float startX, startY, endX, controlX;
@@ -56,6 +58,7 @@ public class PopUpFragment extends Fragment {
         root = (ViewGroup) inflater.inflate(R.layout.pop_up_fragment, container, false);
         fab = (FloatingActionButton) root.findViewById(R.id.fab);
         menu = root.findViewById(R.id.fab_menu);
+        sv = (ScrollView) root.findViewById(R.id.scrollView);
         backgroundOverlay = root.findViewById(R.id.background_overlay);
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbarOverlay = getActivity().findViewById(R.id.toolbar_overlay_dark);
@@ -119,20 +122,21 @@ public class PopUpFragment extends Fragment {
         //Do nothing
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle savedState) {
-//        super.onSaveInstanceState(savedState);
-//        savedState.putBoolean(MENU_STATUS, menuIsOpen);
-//        savedState.putInt(FAB_VISIBILITY, fab.getVisibility());
-//        savedState.putInt(MENU_VISIBILITY, menu.getVisibility());
-//        savedState.putInt(B_OVERLAY_VISIBILITY, backgroundOverlay.getVisibility());
-//        savedState.putInt(T_OVERLAY_VISIBILITY, toolbarOverlay.getVisibility());
-//        savedState.putFloat(TOOLBAR_ELEVATION, toolbar.getElevation());
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        savedState.putBoolean(MENU_STATUS, menuIsOpen);
+        savedState.putInt(FAB_VISIBILITY, fab.getVisibility());
+        savedState.putInt(MENU_VISIBILITY, menu.getVisibility());
+        savedState.putInt(B_OVERLAY_VISIBILITY, backgroundOverlay.getVisibility());
+        savedState.putInt(T_OVERLAY_VISIBILITY, toolbarOverlay.getVisibility());
+        savedState.putFloat(TOOLBAR_ELEVATION, toolbar.getElevation());
+    }
 
     //Animates the FAB to show a menu
     public void showMenu() {
         isAnimating = true;
+        sv.setVisibility(View.VISIBLE);
 
         //Gets margins of the FAB
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
@@ -147,7 +151,6 @@ public class PopUpFragment extends Fragment {
         if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
             startX = fab.getWidth() / 2 - leftMargin;
             startY = root.getHeight() - fab.getHeight() - bottomMargin;
-
         } else {
             startX = root.getWidth() - fab.getWidth() - rightMargin;
             startY = root.getHeight() - fab.getHeight() - bottomMargin;
@@ -272,8 +275,8 @@ public class PopUpFragment extends Fragment {
         }
         path.quadTo(controlX, controlY, endX, endY);
 
-        ObjectAnimator pathAnimator = ObjectAnimator.ofFloat(fab, View.X, View.Y, path);
-        pathAnimator.setDuration(1000);
+        final ObjectAnimator pathAnimator = ObjectAnimator.ofFloat(fab, View.X, View.Y, path);
+        pathAnimator.setDuration(duration);
         pathAnimator.setInterpolator(interpolator);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -281,7 +284,7 @@ public class PopUpFragment extends Fragment {
                 fab.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.blendARGB(
                         Color.WHITE, ContextCompat.getColor(getActivity(), R.color.colorAccent),
                         animation.getAnimatedFraction())));
-                if (animation.getAnimatedFraction() > 0.3f && !animationStarted) {
+                if (animation.getAnimatedFraction() > 0.4f && !animationStarted) {
                     animationStarted = true;
                     //Hides FAB menu
                     int centerX = (int) (Math.abs(fab.getX() - menu.getX()));
@@ -289,26 +292,27 @@ public class PopUpFragment extends Fragment {
                     float startRadius = (float) Math.hypot(menu.getWidth(), menu.getHeight());
                     Animator hideAnimator = ViewAnimationUtils.createCircularReveal(menu, centerX, centerY, startRadius, 120f);
                     hideAnimator.setInterpolator(interpolator);
-                    hideAnimator.setDuration(duration);
+                    hideAnimator.setDuration(500);
                     hideAnimator.addListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             menu.setVisibility(View.GONE);
+                            pathAnimator.resume();
                             fab.setVisibility(View.VISIBLE);
                             //Scales down the FAB
                             scaleFAB(scaleDown, interpolator, duration);
-                            animationStarted = false;
                         }
                     });
                     hideAnimator.start();
-                    //fab.setVisibility(View.VISIBLE);
+                    sv.setVisibility(View.INVISIBLE);
+                    pathAnimator.pause();
                 }
             }
         });
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(fab, View.ALPHA, 0.1f, 1f);
         alphaAnimator.setDuration(duration);
-        alphaAnimator.setStartDelay(200);
+        alphaAnimator.setStartDelay(300);
 
         //Sets play order and starts the animations
         AnimatorSet hideSet = new AnimatorSet();
@@ -320,6 +324,7 @@ public class PopUpFragment extends Fragment {
                 toolbarOverlay.setVisibility(View.GONE);
                 toolbar.setElevation(12);
                 backgroundOverlay.setVisibility(View.GONE);
+                animationStarted = false;
                 menuIsOpen = false;
                 isAnimating = false;
             }
