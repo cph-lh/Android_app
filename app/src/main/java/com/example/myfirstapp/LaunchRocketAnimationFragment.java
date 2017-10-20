@@ -31,11 +31,6 @@ public class LaunchRocketAnimationFragment extends Fragment {
     static final String SAVED_BACKGROUND_COLOR = "color";
     private static final String TAG = "print";
 
-//    public static LaunchRocketAnimationFragment newInstance() {
-//        LaunchRocketAnimationFragment launchRocketAnimationFragment = new LaunchRocketAnimationFragment();
-//        return launchRocketAnimationFragment;
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         super.onCreateView(inflater, container, savedState);
@@ -51,19 +46,6 @@ public class LaunchRocketAnimationFragment extends Fragment {
 
         startPositionY = 0;
         animationDuration = 2500;
-
-        if (savedState != null) {
-            color = savedState.getInt(SAVED_BACKGROUND_COLOR);
-            root.setBackgroundColor(color);
-            startPositionY = savedState.getFloat(SAVED_START_POSITION) * screenHeight;
-            rocket.setTranslationY(startPositionY);
-            doge.setTranslationY(startPositionY);
-            running = savedState.getBoolean(SAVED_RUN_STATUS);
-            if (running) {
-                animationDuration = savedState.getLong(SAVED_ANIMATION_DURATION);
-                startRocketAnimation(animationDuration);
-            }
-        }
 
         //Starts the rocket animation and the background animation when the screen is clicked
         root.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +67,20 @@ public class LaunchRocketAnimationFragment extends Fragment {
                 }
             }
         });
+
+        //Restores saved variables if any
+        if (savedState != null) {
+            color = savedState.getInt(SAVED_BACKGROUND_COLOR);
+            root.setBackgroundColor(color);
+            startPositionY = savedState.getFloat(SAVED_START_POSITION) * screenHeight;
+            rocket.setTranslationY(startPositionY);
+            doge.setTranslationY(startPositionY);
+            running = savedState.getBoolean(SAVED_RUN_STATUS);
+            if (running) {
+                animationDuration = savedState.getLong(SAVED_ANIMATION_DURATION);
+                startRocketAnimation(animationDuration);
+            }
+        }
         return root;
     }
 
@@ -163,6 +159,7 @@ public class LaunchRocketAnimationFragment extends Fragment {
         animator.setDuration(animationDuration);
         background.setVisibility(View.VISIBLE);
         animator.start();
+
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

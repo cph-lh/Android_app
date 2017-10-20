@@ -98,7 +98,6 @@ public class PopUpFragment extends Fragment {
 //                menu.setVisibility(View.VISIBLE);
 //            } else menu.setVisibility(View.GONE);
 //
-//            //
 //            if (savedInstanceState.getInt(B_OVERLAY_VISIBILITY) == 0) {
 //                backgroundOverlay.setVisibility(View.VISIBLE);
 //            } else backgroundOverlay.setVisibility(View.GONE);
@@ -144,7 +143,7 @@ public class PopUpFragment extends Fragment {
         float rightMargin = layoutParams.rightMargin;
         float leftMargin = layoutParams.leftMargin;
 
-        //Detects layout direction and screen orientation
+        //Gets layout direction and screen orientation
         Configuration config = getResources().getConfiguration();
 
         //Start values change depending on layout direction (in rare cases RTL is used)
@@ -195,7 +194,6 @@ public class PopUpFragment extends Fragment {
                     float endRadius = (float) Math.hypot(menu.getWidth(), menu.getHeight());
                     int centerX = (int) (Math.abs(fab.getX() - menu.getX()));
                     int centerY = (int) (Math.abs(fab.getY() - menu.getY()));
-//                    Log.e("enter ", centerX + " " + menu.getWidth() + " " + centerY + " " + menu.getHeight() + " ");
                     Animator revealAnimator = ViewAnimationUtils.createCircularReveal(menu, centerX, centerY, 120f, endRadius);
                     revealAnimator.setInterpolator(interpolator);
                     revealAnimator.setDuration(duration);
@@ -276,7 +274,7 @@ public class PopUpFragment extends Fragment {
         path.quadTo(controlX, controlY, endX, endY);
 
         final ObjectAnimator pathAnimator = ObjectAnimator.ofFloat(fab, View.X, View.Y, path);
-        pathAnimator.setDuration(duration);
+        pathAnimator.setDuration(1000);
         pathAnimator.setInterpolator(interpolator);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -284,7 +282,7 @@ public class PopUpFragment extends Fragment {
                 fab.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.blendARGB(
                         Color.WHITE, ContextCompat.getColor(getActivity(), R.color.colorAccent),
                         animation.getAnimatedFraction())));
-                if (animation.getAnimatedFraction() > 0.4f && !animationStarted) {
+                if (animation.getAnimatedFraction() > 0.6f && !animationStarted) {
                     animationStarted = true;
                     //Hides FAB menu
                     int centerX = (int) (Math.abs(fab.getX() - menu.getX()));

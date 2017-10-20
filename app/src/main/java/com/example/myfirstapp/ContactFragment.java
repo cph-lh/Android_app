@@ -192,7 +192,7 @@ public class ContactFragment extends Fragment {
         } //Do nothing
     }
 
-    //Shows the FABs with speed depending on the given duration
+    //Shows the FABs
     public void showFABs() {
         isAnimating  = true;
 
@@ -217,13 +217,11 @@ public class ContactFragment extends Fragment {
         toolbarOverlay.setVisibility(View.VISIBLE);
         backgroundOverlay.setVisibility(View.VISIBLE);
 
-
         text.setVisibility(View.VISIBLE);
         text1.setVisibility(View.VISIBLE);
         text2.setVisibility(View.VISIBLE);
         text3.setVisibility(View.VISIBLE);
 
-//        isAnimating  = false;
         isOpen = true;
     }
 
